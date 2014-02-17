@@ -12,11 +12,12 @@ var ht = new HashTree({ "one": 1 });
 ht.set(3, "two, three");
 ht.get("two");
 // => { three: 3 }
+ht.set(0, "two, zero");
 ht.tree();
 // => { one: 1, two: { three: 3, zero: 0 } }
 ht.set([ 26 ], "z");
 ht.tree();
-// => { one: 1, two: { three: 3 }, z: [ 26 ] }
+// => { one: 1, two: { three: 3, zero: 0 }, z: [ 26 ] }
 // sort in decending order
 ht.sort(function(a,b){ return (a > b) ? -1 : ( a == b ? 0 : 1) });
 JSON.stringify(ht.tree());
@@ -39,7 +40,7 @@ ht.set(obj, [ 26 ], "z");
 // => obj = { one: 1, two: { three: 3 }, z: [ 26 ] }
 // sort in decending order
 JSON.stringify(ht.sort(obj, function(a,b){ return (a > b) ? -1 : ( a == b ? 0 : 1) }));
-// => { z: [ 26 ], two: { zero: 0, three: 3 }, one: 1 }
+// => { z: [ 26 ], two: { three: 3 }, one: 1 }
 ```
 
 Additionally two hashtrees can be compared with `diff` or `diffToBase`.
