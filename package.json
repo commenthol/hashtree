@@ -1,0 +1,25 @@
+{
+  "name": "hashtree",
+  "version": "0.0.0",
+  "description": "Build up \"hash of hashes\" in javascript and access the data contained.",
+  "main": "hashtree.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/commenthol/hashtree"
+  },
+  "keywords": [
+    "hash",
+    "of",
+    "hashes",
+    "hashtree"
+  ],
+  "author": "commenthol",
+  "license": "MIT",
+  "readmeFilename": "README.md"
+}
