@@ -54,35 +54,51 @@
 	 * 
 	 *     obj = { one: { a: 1 } };
 	 *     hashTree.set(obj, 2, ['two', 'b', '2']);
-	 *     // => obj = { one: { a: 1 }, two: { b: { '2': 2 } } }
+	 *     // => true; obj = { one: { a: 1 }, two: { b: { '2': 2 } } }
 	 * 
 	 * @param {Object} obj Object to append `value` to lead defined by `keys`
 	 * @param {*} value The value to add
 	 * @param {string|Array} keys comma separated string or Array to append value to hashtree object `obj`
+	 * @return {Boolean} true if value was set, otherwise false
 	 */
 	hashTree.set = function (obj, value, keys){
 		var 
 			i,
+			lastkey,
+			newbr = false,
 			prev,
 			tmp = obj;
 		
 		keys = splitKeys(keys);
 		
 		if (keys === undefined || obj === undefined || value === undefined) {
-			return;
+			return false;
 		}
 
 		for (i = 0; i < keys.length; i +=1) {
 			prev = tmp;
 			if (tmp.hasOwnProperty([keys[i]])) {
 				tmp = tmp[keys[i]];
+				newbr = false;
 			}
 			else {
+				// append a new branch
 				tmp = tmp[keys[i]] = {};
+				newbr = true;
 			}
 		}
-		prev[keys[keys.length-1]] = value;
-		return;
+		lastkey = keys[keys.length-1];
+		
+		if (prev[lastkey] === undefined || 
+				!newbr && 
+				typeof(prev[lastkey]) === 'object' && 
+				typeof(value) !== 'object'
+		) {
+			return false;
+		}
+		
+		prev[lastkey] = value;
+		return true;
 	};
 
 	/**
@@ -232,10 +248,14 @@
 		if (typeof(keys) === 'string') {
 			return keys.replace(/(?:\s*,\s*)+/g, ',').split(',');
 		}
-		else if (keys && typeof(keys) === 'object' && typeof(keys.length) === 'number') {
+		else if (isArray(keys)) {
 			return keys;
 		}
 		return;
+	};
+
+	var isArray = function (obj) {
+		return obj && typeof(obj) === 'object' && typeof(obj.length) === 'number';
 	};
 
 	exports.hashTree = hashTree;
@@ -273,9 +293,10 @@
 	 * @see hashTree.set()
 	 * @param {*} value The value to add
 	 * @param {string|Array} keys comma separated string or Array to gather `value` from hashtree object `obj`
+	 * @return {Boolean} true if value was set, otherwise false
 	 */
 	HashTree.prototype.set = function(value, keys) {
-		hashTree.set(this._tree, value, keys);
+		return hashTree.set(this._tree, value, keys);
 	};
 
 	/**
