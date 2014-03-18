@@ -164,15 +164,15 @@
 	 * @return {Boolean} `true` if branch could be deleted; otherwise `false`
 	 */
 	hashTree.delete = function (obj, keys){
-		var tmp, lastKey;
+		var tmp, lastkey;
 		
 		keys = splitKeys(keys);
 		
 		if (keys) {
-			lastKey = keys.pop();
+			lastkey = keys.pop();
 			tmp = hashTree.get(obj, keys);
 			if (tmp !== undefined) {
-				delete(tmp[lastKey]);
+				delete(tmp[lastkey]);
 				return true;
 			}
 		}
@@ -329,7 +329,7 @@
 				.split('.');
 		}
 		else if (Array.isArray(keys)) {
-			return keys;
+			return [].concat(keys);
 		}
 		return;
 	};
