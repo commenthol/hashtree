@@ -155,9 +155,9 @@
 	 * 
 	 * Example:
 	 * 
-	 *     obj = { one: { a: 1, b: 2, c: 3 } };
-	 *     hashTree.delete(obj, 'one');
-	 *     // => true; obj = { one: {} }
+	 *     obj = { one: { a: [1, 2, 3], b: 2, c: 3 } };
+	 *     hashTree.delete(obj, 'one.a');
+	 *     // => true; obj = { one: { b: 2, c: 3 } }
 	 * 
 	 * @param {Object} obj Object to append `value` to lead defined by `keys`
 	 * @param {String|Array} keys dot separated string or Array to append value to hashtree object `obj`
