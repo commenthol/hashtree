@@ -11,10 +11,10 @@ Using objects:
 var HashTree = require('hashtree').HashTree;
 
 var ht = new HashTree({ "one": 1 }); 
-ht.set("two, three", 3);
+ht.set("two.three", 3);
 ht.get("two");
 // => { three: 3 }
-ht.set("two, zero", 0);
+ht.set("two.zero", 0);
 ht.tree();
 // => { one: 1, two: { three: 3, zero: 0 } }
 ht.set("z", [ 26 ]);
@@ -24,9 +24,9 @@ ht.tree();
 ht.sort(function(a,b){ return (a > b) ? -1 : ( a == b ? 0 : 1) });
 JSON.stringify(ht.tree());
 // => { z: [ 26 ], two: { zero: 0, three: 3 }, one: 1 }
-ht.clear("two");
+ht.delete("two");
 ht.tree();
-// => { z: [ 26 ], two: {}, one: 1 }
+// => { z: [ 26 ], one: 1 }
 ``` 
 
 Using functions:
@@ -35,16 +35,16 @@ Using functions:
 var ht = require('hashtree').hashTree;
 
 var obj = { "one": 1 };
-ht.set(obj, "two, three", 3);
+ht.set(obj, "two.three", 3);
 ht.get(obj, "two");
 // => { three: 3 }
 ht.set(obj, "z", [ 26 ]);
-// => obj === { one: 1, two: { three: 3 }, z: [ 26 ] }
+// => { one: 1, two: { three: 3 }, z: [ 26 ] }
 // sort in decending order
 JSON.stringify(ht.sort(obj, function(a,b){ return (a > b) ? -1 : ( a == b ? 0 : 1) }));
 // => { z: [ 26 ], two: { three: 3 }, one: 1 }
-ht.clear(obj, "two");
-// => obj === { z: [ 26 ], two: {}, one: 1 }
+ht.delete(obj, "two");
+// => { z: [ 26 ], one: 1 }
 ```
 
 Additionally two hashtrees can be compared with `diff` or `diffToBase`.

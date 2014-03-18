@@ -20,7 +20,7 @@
 	 *     // => 1
 	 * 
 	 * @param {Object} obj Object to append `value` to lead defined by `keys`
-	 * @param {string|Array} keys comma separated string or Array to gather `value` from hashtree object `obj`
+	 * @param {String|Array} keys dot separated string or Array to gather `value` from hashtree object `obj`
 	 * @return {*} value found using keys
 	 */
 	hashTree.get = function (obj, keys){
@@ -59,7 +59,7 @@
 	 *     // => true; obj = { one: { a: 1 }, two: { b: { '2': 2 } } }
 	 * 
 	 * @param {Object} obj Object to append `value` to lead defined by `keys`
-	 * @param {string|Array} keys comma separated string or Array to append value to hashtree object `obj`
+	 * @param {String|Array} keys dot separated string or Array to append value to hashtree object `obj`
 	 * @param {*} value The value to add
 	 * @return {Boolean} true if value was set, otherwise false
 	 */
@@ -117,7 +117,7 @@
 	 *     // => true; obj = { one: { a: 0, b: 0, c: 0 } }
 	 * 
 	 * @param {Object} obj Object to append `value` to lead defined by `keys`
-	 * @param {string|Array} keys comma separated string or Array to append value to hashtree object `obj`
+	 * @param {String|Array} keys dot separated string or Array to append value to hashtree object `obj`
 	 * @param {*} value The value to add
 	 */
 	hashTree.setAll = function (obj, keys, value){
@@ -136,7 +136,7 @@
 			_obj = hashTree.get(obj, keys);
 		}
 
-		if (_obj && typeof(_obj) === 'object' && tmp !== null && !isArray(_obj)) {
+		if (_obj && typeof(_obj) === 'object' && tmp !== null && !Array.isArray(obj)) {
 			for (i in _obj) {
 				if (_obj.hasOwnProperty(i)) {
 					if (typeof(_obj[i]) === 'object') {
@@ -151,24 +151,28 @@
 	};
 
 	/**
-	 * Clears a branch of the hash tree on `obj`.
+	 * Deletes a branch of the hash tree on `obj`.
 	 * 
 	 * Example:
 	 * 
 	 *     obj = { one: { a: 1, b: 2, c: 3 } };
-	 *     hashTree.clear(obj, 'one');
+	 *     hashTree.delete(obj, 'one');
 	 *     // => true; obj = { one: {} }
 	 * 
 	 * @param {Object} obj Object to append `value` to lead defined by `keys`
-	 * @param {string|Array} keys comma separated string or Array to append value to hashtree object `obj`
+	 * @param {String|Array} keys dot separated string or Array to append value to hashtree object `obj`
+	 * @return {Boolean} `true` if branch could be deleted; otherwise `false`
 	 */
-	hashTree.clear = function (obj, keys){
-		var tmp;
+	hashTree.delete = function (obj, keys){
+		var tmp, lastKey;
+		
+		keys = splitKeys(keys);
 		
 		if (keys) {
+			lastKey = keys.pop();
 			tmp = hashTree.get(obj, keys);
 			if (tmp !== undefined) {
-				hashTree.set(obj, keys, {}, {overwrite: true});
+				delete(tmp[lastKey]);
 				return true;
 			}
 		}
@@ -315,27 +319,19 @@
 	 * Normalize and split `keys` for `get` and `set` method
 	 * 
 	 * @private
-	 * @param {string|Array} keys
+	 * @param {String|Array} keys
 	 */
 	var splitKeys = function (keys) {
 		
 		if (typeof(keys) === 'string') {
-			return keys.replace(/(?:\s*,\s*)+/g, ',').split(',');
+			return keys.replace(/^\s*\.\s*/,'')
+				.replace(/(?:\s*\.\s*)+/g, '.')
+				.split('.');
 		}
-		else if (isArray(keys)) {
+		else if (Array.isArray(keys)) {
 			return keys;
 		}
 		return;
-	};
-
-	/**
-	 * Check `obj` on native array
-	 * 
-	 * @private
-	 * @param {Object} obj object
-	 */
-	var isArray = function (obj) {
-		return obj && typeof(obj) === 'object' && typeof(obj.length) === 'number';
 	};
 
 	/**
@@ -353,15 +349,20 @@
 	};
 	
 	/**
-	 * Clears a HashTree
+	 * Deletes a HashTree
+	 * 
+	 * @see hashTree.delete()
+	 * @param {String|Array} keys dot separated string or Array to append value to hashtree object `obj`
+	 * @return {Boolean} `true` if branch could be deleted; otherwise `false`
 	 */
-	HashTree.prototype.clear = function(keys){
+	HashTree.prototype.delete = function(keys){
 		
 		if (keys) {
-			hashTree.clear(this._tree, keys);
+			return hashTree.delete(this._tree, keys);
 		}
 		else {
 			this._tree = {};
+			return true;
 		}
 	};
 
@@ -369,7 +370,7 @@
 	 * Get value from HashTree using keys
 	 * 
 	 * @see hashTree.get()
-	 * @param {string|Array} keys comma separated string or Array to gather `value` from hashtree object `obj`
+	 * @param {String|Array} keys dot separated string or Array to gather `value` from hashtree object `obj`
 	 * @return {*} value found using keys
 	 */
 	HashTree.prototype.get = function(keys) {
@@ -380,7 +381,7 @@
 	 * Set value on HashTree using keys
 	 * 
 	 * @see hashTree.set()
-	 * @param {string|Array} keys comma separated string or Array to gather `value` from hashtree object `obj`
+	 * @param {String|Array} keys dot separated string or Array to gather `value` from hashtree object `obj`
 	 * @param {*} value The value to add
 	 * @return {Boolean} true if value was set, otherwise false
 	 */
@@ -399,7 +400,7 @@
 	 *     _hashTree.tree();
 	 *     // => { one: { a: 0, b: 0, c: 0 } }
 	 * 
-	 * @param {string|Array} keys comma separated string or Array to append value to hashtree object `obj`
+	 * @param {String|Array} keys dot separated string or Array to append value to hashtree object `obj`
 	 * @param {*} value The value to add
 	 */
 	HashTree.prototype.setAll = function (keys, value){

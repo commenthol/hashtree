@@ -1,18 +1,18 @@
 hashTree
 
 
-_Source: [hashtree.js](/hashtree.js)_
+_Source: [hashtree.js](../hashtree.js)_
 
 <a name="tableofcontents"></a>
 
 - <a name="toc_hashtreegetobj-keys"></a><a name="toc_hashtree"></a>[hashTree.get](#hashtreegetobj-keys)
 - <a name="toc_hashtreesetallobj-keys-value"></a>[hashTree.setAll](#hashtreesetallobj-keys-value)
-- <a name="toc_hashtreeclearobj-keys"></a>[hashTree.clear](#hashtreeclearobj-keys)
+- <a name="toc_hashtreedeleteobj-keys"></a>[hashTree.delete](#hashtreedeleteobj-keys)
 - <a name="toc_hashtreedifftobasebase-obj"></a>[hashTree.diffToBase](#hashtreedifftobasebase-obj)
 - <a name="toc_hashtreediffobj1-obj2-keys-diff1-diff2"></a>[hashTree.diff](#hashtreediffobj1-obj2-keys-diff1-diff2)
 - <a name="toc_hashtreesortobj-sorter"></a>[hashTree.sort](#hashtreesortobj-sorter)
 - <a name="toc_exportshashtree"></a><a name="toc_exports"></a>[exports.hashTree](#exportshashtree)
-- <a name="toc_hashtreeprototypeclear"></a><a name="toc_hashtreeprototype"></a><a name="toc_hashtree"></a>[HashTree.prototype.clear](#hashtreeprototypeclear)
+- <a name="toc_hashtreeprototypedeletekeys"></a><a name="toc_hashtreeprototype"></a><a name="toc_hashtree"></a>[HashTree.prototype.delete](#hashtreeprototypedeletekeys)
 - <a name="toc_hashtreeprototypegetkeys"></a>[HashTree.prototype.get](#hashtreeprototypegetkeys)
 - <a name="toc_hashtreeprototypesetkeys-value"></a>[HashTree.prototype.set](#hashtreeprototypesetkeys-value)
 - <a name="toc_hashtreeprototypesetallkeys-value"></a>[HashTree.prototype.setAll](#hashtreeprototypesetallkeys-value)
@@ -37,7 +37,7 @@ hashTree.get(obj, 'one, a');
 **Parameters:**
 
 - `{Object} obj` Object to append `value` to lead defined by `keys`
-- `{string | Array} keys` comma separated string or Array to gather `value` from hashtree object `obj`
+- `{String | Array} keys` dot separated string or Array to gather `value` from hashtree object `obj`
 
 **Return:**
 
@@ -60,27 +60,31 @@ hashTree.setAll(obj, 'one', 0);
 **Parameters:**
 
 - `{Object} obj` Object to append `value` to lead defined by `keys`
-- `{string | Array} keys` comma separated string or Array to append value to hashtree object `obj`
+- `{String | Array} keys` dot separated string or Array to append value to hashtree object `obj`
 - `{*} value` The value to add
 
 <sub>Go: [TOC](#tableofcontents) | [hashTree](#toc_hashtree)</sub>
 
-# hashTree.clear(obj, keys)
+# hashTree.delete(obj, keys)
 
-> Clears a branch of the hash tree on `obj`.
+> Deletes a branch of the hash tree on `obj`.
 
 **Example:**
 
 ```js
 obj = { one: { a: 1, b: 2, c: 3 } };
-hashTree.clear(obj, 'one');
+hashTree.delete(obj, 'one');
 // => true; obj = { one: {} }
 ```
 
 **Parameters:**
 
 - `{Object} obj` Object to append `value` to lead defined by `keys`
-- `{string | Array} keys` comma separated string or Array to append value to hashtree object `obj`
+- `{String | Array} keys` dot separated string or Array to append value to hashtree object `obj`
+
+**Return:**
+
+`{Boolean}` `true` if branch could be deleted; otherwise `false`
 
 <sub>Go: [TOC](#tableofcontents) | [hashTree](#toc_hashtree)</sub>
 
@@ -177,9 +181,21 @@ hashTree.sort(obj);
 
 <a name="hashtree"></a>
 
-# HashTree.prototype.clear()
+# HashTree.prototype.delete(keys)
 
-> Clears a HashTree
+> Deletes a HashTree
+
+**Parameters:**
+
+- `{String | Array} keys` dot separated string or Array to append value to hashtree object `obj`
+
+**Return:**
+
+`{Boolean}` `true` if branch could be deleted; otherwise `false`
+
+**See:**
+
+- [hashTree.delete](#hashtreedeleteobj-keys)()
 
 <sub>Go: [TOC](#tableofcontents) | [HashTree.prototype](#toc_hashtreeprototype)</sub>
 
@@ -189,7 +205,7 @@ hashTree.sort(obj);
 
 **Parameters:**
 
-- `{string | Array} keys` comma separated string or Array to gather `value` from hashtree object `obj`
+- `{String | Array} keys` dot separated string or Array to gather `value` from hashtree object `obj`
 
 **Return:**
 
@@ -207,7 +223,7 @@ hashTree.sort(obj);
 
 **Parameters:**
 
-- `{string | Array} keys` comma separated string or Array to gather `value` from hashtree object `obj`
+- `{String | Array} keys` dot separated string or Array to gather `value` from hashtree object `obj`
 - `{*} value` The value to add
 
 **Return:**
@@ -236,7 +252,7 @@ _hashTree.tree();
 
 **Parameters:**
 
-- `{string | Array} keys` comma separated string or Array to append value to hashtree object `obj`
+- `{String | Array} keys` dot separated string or Array to append value to hashtree object `obj`
 - `{*} value` The value to add
 
 <sub>Go: [TOC](#tableofcontents) | [HashTree.prototype](#toc_hashtreeprototype)</sub>
