@@ -12,7 +12,7 @@ suite ('hashTree.set', function (){
 
 	suite ('- set on non existing object', function (){
 		var obj;
-		var r = hashTree.set(obj, "test,test,test", 1);
+		var r = hashTree.set(obj, "test.test.test", 1);
 		
 		test('- shall return false', function(){
 			assert.equal(r, false);
@@ -24,7 +24,7 @@ suite ('hashTree.set', function (){
 
 	suite ('- set test test test to 0', function (){
 		var obj = {};
-		var r = hashTree.set(obj, "test,test,test", 0);
+		var r = hashTree.set(obj, "test.test.test", 0);
 		
 		test('- shall return true', function(){
 			assert.equal(r, true);
@@ -36,7 +36,7 @@ suite ('hashTree.set', function (){
 
 	suite ('- set test test test to ""', function (){
 		var obj = {};
-		var r = hashTree.set(obj, "test,test,test", "");
+		var r = hashTree.set(obj, "test.test.test", "");
 		
 		test('- shall return true', function(){
 			assert.equal(r, true);
@@ -48,7 +48,7 @@ suite ('hashTree.set', function (){
 
 	suite ('- set test test test to {}', function (){
 		var obj = {};
-		var r = hashTree.set(obj, "test,test,test", {});
+		var r = hashTree.set(obj, "test.test.test", {});
 		
 		test('- shall return true', function(){
 			assert.equal(r, true);
@@ -77,7 +77,7 @@ suite ('hashTree.set', function (){
 		var
 			r,
 			obj = { test: 2 };
-		r = hashTree.set(obj, "test,test", 1);
+		r = hashTree.set(obj, "test.test", 1);
 		
 		test('- shall return false', function(){
 			assert.equal(r, false);	
@@ -122,7 +122,7 @@ suite ('hashTree.set', function (){
 		var
 			r,
 			obj = { test: { test: null }};
-		r = hashTree.set(obj, "test, test", { "overwrite": 1 });
+		r = hashTree.set(obj, "test .test", { "overwrite": 1 });
 		
 		test('- shall return true', function(){
 			assert.equal(r, true);	
@@ -137,7 +137,7 @@ suite ('hashTree.set', function (){
 		var
 			r,
 			obj = { test: { test: {} }};
-		r = hashTree.set(obj, "test, test", { "overwrite": 1 });
+		r = hashTree.set(obj, "test .test", { "overwrite": 1 });
 		
 		test('- shall return true', function(){
 			assert.equal(r, true);	
@@ -165,8 +165,8 @@ suite ('hashTree.set', function (){
 	
 	test ('- extending', function (){
 		var obj = {};
-		hashTree.set(obj, "one,test", 1);
-		hashTree.set(obj, "one,zero", 0);
+		hashTree.set(obj, "one.test", 1);
+		hashTree.set(obj, "one.zero", 0);
 		hashTree.set(obj, "two", 2);
 		hashTree.set(obj, "three", "3");
 		
@@ -184,14 +184,14 @@ suite ('hashTree.set', function (){
 
 	test ('- set false', function (){
 		var obj = {};
-		hashTree.set(obj, "one,test", false);
+		hashTree.set(obj, "one.test", false);
 		
 		assert.deepEqual(obj, { one: { test: false }});
 	});
 
 	test ('- set undefined', function (){
 		var obj = {};
-		hashTree.set(obj, "one,test", undefined);
+		hashTree.set(obj, "one.test", undefined);
 		
 		assert.deepEqual(obj, {});
 	});
@@ -201,8 +201,8 @@ suite ('hashTree.set', function (){
 		var obj = {
 			"this": {}
 		};
-		hashTree.set(obj, "this, constructor", 1);
-		hashTree.set(obj, "this, prototype", "a");
+		hashTree.set(obj, "this.constructor", 1);
+		hashTree.set(obj, "this.prototype", "a");
 		assert.deepEqual(obj, {"this":{"constructor":1,"prototype":"a"}});
 	});
 });
@@ -212,7 +212,7 @@ suite ('HashTree.set', function (){
 
 	suite ('- set test test test to 0', function (){
 		var ht = new HashTree();
-		var r = ht.set("test,test,test", 0);
+		var r = ht.set("test.test.test", 0);
 		
 		test('- shall return true', function(){
 			assert.equal(r, true);
@@ -224,7 +224,7 @@ suite ('HashTree.set', function (){
 
 	suite ('- set test test test to ""', function (){
 		var ht = new HashTree();
-		var r = ht.set("test,test,test", "");
+		var r = ht.set("test.test.test", "");
 		
 		test('- shall return true', function(){
 			assert.equal(r, true);
@@ -236,7 +236,7 @@ suite ('HashTree.set', function (){
 
 	test ('- set test test test to {}', function (){
 		var ht = new HashTree();
-		var r = ht.set("test,test,test", {});
+		var r = ht.set("test.test.test", {});
 		
 		test('- shall return true', function(){
 			assert.equal(r, true);
@@ -261,7 +261,7 @@ suite ('HashTree.set', function (){
 
 	test ('- extending', function (){
 		var ht = new HashTree();
-		ht.set("one,test", 1);
+		ht.set("one.test", 1);
 		ht.set("two", 2);
 		ht.set("three", "3");
 		
@@ -279,15 +279,15 @@ suite ('HashTree.set', function (){
 
 	test ('- set false', function (){
 		var ht = new HashTree();
-		ht.set("one,test", false);
+		ht.set("one.test", false);
 		
 		assert.deepEqual(ht.tree(), { one: { test: false }});
 	});
 
-	test ('- clear and set', function (){
+	test ('- delete and set', function (){
 		var ht = new HashTree({ "one": 1 });
 		
-		ht.clear();
+		ht.delete();
 		ht.set("two", 2);
 		
 		assert.deepEqual(ht.tree(), { two: 2 });
@@ -295,7 +295,7 @@ suite ('HashTree.set', function (){
 
 	test ('- set undefined', function (){
 		var ht = new HashTree();
-		ht.set("one,test", undefined);
+		ht.set("one.test", undefined);
 		
 		assert.deepEqual(ht.tree(), {});
 	});
@@ -304,8 +304,8 @@ suite ('HashTree.set', function (){
 		var obj = {"this": {}};
 		var ht = new HashTree(obj);
 		
-		ht.set("this, constructor", 1);
-		ht.set("this, prototype", "a");
+		ht.set("this.constructor", 1);
+		ht.set("this.prototype", "a");
 		assert.deepEqual(ht.tree(), {"this":{"constructor":1,"prototype":"a"}});
 	});
 
