@@ -72,9 +72,9 @@ hashTree.setAll(obj, 'one', 0);
 **Example:**
 
 ```js
-obj = { one: { a: 1, b: 2, c: 3 } };
-hashTree.delete(obj, 'one');
-// => true; obj = { one: {} }
+obj = { one: { a: [1, 2, 3], b: 2, c: 3 } };
+hashTree.delete(obj, 'one.a');
+// => true; obj = { one: { b: 2, c: 3 } }
 ```
 
 **Parameters:**
