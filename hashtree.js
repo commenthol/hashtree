@@ -34,9 +34,8 @@
 			return;
 		}
 
-		for (i = 0; i < keys.length; i +=1) {
-
-			if (tmp.hasOwnProperty([keys[i]])) {
+		for (i = 0; i < keys.length; i+=1 ) {
+			if (typeof tmp === 'object' && tmp.hasOwnProperty(keys[i])) {
 				tmp = tmp[keys[i]];
 			}
 			else {

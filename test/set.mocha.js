@@ -205,6 +205,17 @@ suite ('hashTree.set', function (){
 		hashTree.set(obj, "this.prototype", "a");
 		assert.deepEqual(obj, {"this":{"constructor":1,"prototype":"a"}});
 	});
+
+	test ('- set value using reserved keywords', function (){
+		var r;
+		var obj = {};
+		hashTree.set(obj, [ 1, 5, 9 ], '#1');
+		hashTree.set(obj, [ 1, 5, 9, 0 ], '#2');
+		r = hashTree.get(obj, [ 1, 5, 9, 0 ] );
+
+		assert.deepEqual(obj, {"1":{"5":{"9":"#1"}}});
+		assert.deepEqual(r, undefined);
+	});
 });
 
 

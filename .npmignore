@@ -1,0 +1,6 @@
+.travis.yml
+.npmignore
+.gitignore
+*.tgz
+sample.js
+*.sh

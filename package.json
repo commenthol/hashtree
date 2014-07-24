@@ -1,6 +1,6 @@
 {
   "name": "hashtree",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Build up \"hash of hashes\" in javascript and access the data contained.",
   "main": "hashtree.js",
   "directories": {
@@ -18,8 +18,6 @@
   },
   "keywords": [
     "hash",
-    "of",
-    "hashes",
     "hashtree"
   ],
   "author": "commenthol",
