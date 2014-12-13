@@ -7,7 +7,6 @@ var
 	hashTree = require('../hashtree.js').hashTree,
 	HashTree = require('../hashtree.js').HashTree;
 
-
 describe ('hashTree.set', function (){
 
 	describe ('- set on non existing object', function (){

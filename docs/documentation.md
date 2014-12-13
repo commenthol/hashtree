@@ -23,7 +23,8 @@ _Source: [hashtree.js](../hashtree.js)_
 - <a name="toc_hashtreeprototypesortsorter"></a>[HashTree.prototype.sort](#hashtreeprototypesortsorter)
 - <a name="toc_exportshashtree"></a>[exports.HashTree](#exportshashtree)
 - <a name="toc_opsref-key"></a>[Ops](#opsref-key)
-- <a name="toc_opsprototypeinc"></a><a name="toc_opsprototype"></a>[Ops.prototype.inc](#opsprototypeinc)
+- <a name="toc_opsprototypekeys"></a><a name="toc_opsprototype"></a>[Ops.prototype.keys](#opsprototypekeys)
+- <a name="toc_opsprototypeinc"></a>[Ops.prototype.inc](#opsprototypeinc)
 - <a name="toc_opsprototypedec"></a>[Ops.prototype.dec](#opsprototypedec)
 - <a name="toc_opsprototypeaddval"></a>[Ops.prototype.add](#opsprototypeaddval)
 - <a name="toc_opsprototypesubval"></a>[Ops.prototype.sub](#opsprototypesubval)
@@ -386,6 +387,16 @@ ahashTree.tree();
 <sub>Go: [TOC](#tableofcontents)</sub>
 
 <a name="opsprototype"></a>
+
+# Ops.prototype.keys()
+
+> return keys of a hash tree branch
+
+**Return:**
+
+`{Array}` array of keys
+
+<sub>Go: [TOC](#tableofcontents) | [Ops.prototype](#toc_opsprototype)</sub>
 
 # Ops.prototype.inc()
 

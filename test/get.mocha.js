@@ -6,7 +6,6 @@ var assert = require('assert'),
 	hashTree = require('../hashtree.js').hashTree,
 	HashTree = require('../hashtree.js').HashTree;
 
-
 describe ('hashTree.get', function (){
 
 	var obj = {
@@ -34,7 +33,7 @@ describe ('hashTree.get', function (){
 		var r;
 		r = hashTree.get(obj);
 		
-		assert.deepEqual(r, undefined);
+		assert.deepEqual(r, obj);
 	});
 
 	it ('- find one a', function (){
@@ -145,7 +144,7 @@ describe ('HashTree.get', function (){
 	it ('- find undefined', function (){
 		var r = ht.get();
 		
-		assert.deepEqual(r, undefined);
+		assert.deepEqual(r, ht.tree());
 	});
 
 	it ('- find one a', function (){

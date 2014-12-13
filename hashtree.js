@@ -31,7 +31,7 @@
 		keys = splitKeys(keys);
 
 		if (keys === undefined) {
-			return;
+			return obj;
 		}
 
 		for (i = 0; i < keys.length; i+=1 ) {
@@ -67,7 +67,7 @@
 		var i,
 			lastkey,
 			newbr = false,
-			prev,
+			last,
 			tmp = obj;
 
 		_overwrite = _overwrite || false;
@@ -78,7 +78,7 @@
 		}
 
 		for (i = 0; i < keys.length; i +=1) {
-			prev = tmp;
+			last = tmp;
 			if (tmp.hasOwnProperty([keys[i]])) {
 				tmp = tmp[keys[i]];
 				newbr = false;
@@ -92,16 +92,16 @@
 		lastkey = keys[keys.length-1];
 
 		if (!_overwrite &&
-			(prev[lastkey] === undefined ||
+			(last[lastkey] === undefined ||
 				!newbr &&
-				typeof(prev[lastkey]) === 'object' &&
+				typeof(last[lastkey]) === 'object' &&
 				typeof(value) !== 'object'
 			)
 		) {
 			return false;
 		}
 
-		prev[lastkey] = value;
+		last[lastkey] = value;
 		return true;
 	};
 
@@ -157,7 +157,12 @@
 		keys = splitKeys(keys) || [];
 		self.key = keys.pop();
 		self.ref = hashTree.get(obj, keys);
-		
+
+		if (self.key === undefined) {
+			self.ref = {};
+			self.key = "_";
+			self.ref[self.key] = obj;
+		}
 		if (typeof self.ref !== 'object') {
 			hashTree.set(obj, keys, {});
 			self.ref = hashTree.get(obj, keys);
@@ -500,7 +505,18 @@
 		this.isBoolean = (typeof this.ref[this.key] === 'boolean');
 		this.isString = (typeof this.ref[this.key] === 'string');
 		this.isArray = Array.isArray(this.ref[this.key]);
+		this.isObject = (!this.isArray && typeof this.ref[this.key] === 'object');
 	}
+	
+	/**
+	 * return keys of a hash tree branch
+	 * @return {Array} array of keys
+	 */
+	Ops.prototype.keys = function() {
+		if (this.isObject) {
+			return Object.keys(this.ref[this.key]) || [];
+		}
+	};
 	
 	/**
 	 * increment 

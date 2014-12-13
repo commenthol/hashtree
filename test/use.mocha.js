@@ -6,20 +6,12 @@ var assert = require('assert'),
 	hashTree = require('../hashtree.js').hashTree,
 	HashTree = require('../hashtree.js').HashTree;
 
-
 describe ('hashTree.use', function (){
 
 	describe ('rare cases', function() {
 		it ('use on root without key', function (){
-			var obj = {};
-			var exp = {"undefined":0};
-			
-			hashTree.use(obj);
-			assert.deepEqual(obj, exp);
-		});
-		it ('use on obj without key', function (){
-			var obj = { a: 10 };
-			var exp = { a: 10, "undefined": 0};
+			var obj = { a: 1 };
+			var exp = { a: 1 };
 			
 			hashTree.use(obj);
 			assert.deepEqual(obj, exp);
@@ -294,6 +286,34 @@ describe ('hashTree.use', function (){
 		});
 	});	
 
+	describe ('keys', function(){
+		it ('get keys on obj with undefined keys', function(){
+			var obj = { a: { b: {
+						1: 11,
+						2: 22,
+						3: 33,
+						4: 44
+					} } };
+				
+			var res;
+			res = hashTree.use(obj).keys();
+			assert.deepEqual(res, ["a"]);
+			res = hashTree.use(obj, "a").keys();
+			assert.deepEqual(res, ["b"]);
+			res = hashTree.use(obj, "a.b").keys();
+			assert.deepEqual(res, ["1","2","3","4"]);
+		});
+		it ('get keys from undefined keys', function(){
+			var obj = { 
+					1: 11,
+					2: 22,
+					3: 33,
+					4: 44
+				};
+			var res = hashTree.use(obj).keys();
+			assert.deepEqual(res, ["1","2","3","4"]);
+		});
+	});
 });
 
 describe ('HashTree.use', function (){
