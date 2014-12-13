@@ -1,33 +1,33 @@
 /**
  * hashTree
- * 
+ *
  * @copyright commenthol 2014
  * @license Available under MIT license
  */
- 
+
 ;(function(exports){
 	"use strict";
-	
+
 	var hashTree = {};
 
 	/**
 	 * Gets a value in the hash tree `obj` according to `keys`.
-	 * 
+	 *
 	 * Example:
-	 * 
+	 *
 	 *     obj = { one: { a: 1 } };
-	 *     hashTree.get(obj, 'one, a');
+	 *     hashTree.get(obj, 'one.a');
 	 *     // => 1
-	 * 
-	 * @param {Object} obj Object to append `value` to lead defined by `keys`
-	 * @param {String|Array} keys dot separated string or Array to gather `value` from hashtree object `obj`
-	 * @return {*} value found using keys
+	 *
+	 * @param {Object} obj : Object to append `value` to lead defined by `keys`
+	 * @param {String|Array} keys : dot separated string or Array to gather `value` from hashtree object `obj`
+	 * @return {Any} value found using keys
 	 */
 	hashTree.get = function (obj, keys){
-		var 
-			i,
+		var i,
+			last,
 			tmp = obj;
-		
+
 		keys = splitKeys(keys);
 
 		if (keys === undefined) {
@@ -48,32 +48,31 @@
 
 	/**
 	 * Sets a value in the hash tree `obj` according to `keys`.
-	 * 
+	 *
 	 * Example:
-	 * 
+	 *
 	 *     obj = { one: { a: 1 } };
 	 *     hashTree.set(obj, ['two', 'b', '2'], 2);
 	 *     // OR
-	 *     hashTree.set(obj, 'two, b, 2', 2);
+	 *     hashTree.set(obj, 'two.b.2', 2);
 	 *     // => true; obj = { one: { a: 1 }, two: { b: { '2': 2 } } }
-	 * 
-	 * @param {Object} obj Object to append `value` to lead defined by `keys`
-	 * @param {String|Array} keys dot separated string or Array to append value to hashtree object `obj`
-	 * @param {*} value The value to add
+	 *
+	 * @param {Object} obj : Object to append `value` to lead defined by `keys`
+	 * @param {String|Array} keys : dot separated string or Array to append value to hashtree object `obj`
+	 * @param {Any} value : The value to set
+	 * @property {Boolean} _overwrite : _overwrite in any case
 	 * @return {Boolean} true if value was set, otherwise false
 	 */
-	// @property {Boolean} options.overwrite overwrite in any case (required for clear) 
-	hashTree.set = function (obj, keys, value, options){
-		var 
-			i,
+	hashTree.set = function (obj, keys, value, _overwrite){
+		var i,
 			lastkey,
 			newbr = false,
 			prev,
 			tmp = obj;
-			
-		options = options || { overwrite: false };
+
+		_overwrite = _overwrite || false;
 		keys = splitKeys(keys);
-		
+
 		if (keys === undefined || obj === undefined || value === undefined) {
 			return false;
 		}
@@ -91,42 +90,107 @@
 			}
 		}
 		lastkey = keys[keys.length-1];
-		
-		if (!options.overwrite && 
-			(prev[lastkey] === undefined || 
-				!newbr && 
-				typeof(prev[lastkey]) === 'object' && 
+
+		if (!_overwrite &&
+			(prev[lastkey] === undefined ||
+				!newbr &&
+				typeof(prev[lastkey]) === 'object' &&
 				typeof(value) !== 'object'
 			)
 		) {
 			return false;
 		}
-		
+
 		prev[lastkey] = value;
 		return true;
 	};
 
 	/**
-	 * Sets all leafes of the hash tree on `obj` to `value`.
-	 * 
+	 * Deletes a branch of the hash tree on `obj`.
+	 *
 	 * Example:
-	 * 
+	 *
+	 *     obj = { one: { a: [1, 2, 3], b: 2, c: 3 } };
+	 *     hashTree.delete(obj, 'one.a');
+	 *     // => true; obj = { one: { b: 2, c: 3 } }
+	 *
+	 * @param {Object} obj : Object to append `value` to lead defined by `keys`
+	 * @param {String|Array} keys : dot separated string or Array to append value to hashtree object `obj`
+	 * @return {Boolean} `true` if branch could be deleted; otherwise `false`
+	 */
+	hashTree.delete = function (obj, keys){
+		var tmp, lastkey;
+
+		keys = splitKeys(keys);
+
+		if (keys) {
+			lastkey = keys.pop();
+			tmp = hashTree.get(obj, keys);
+			if (tmp !== undefined) {
+				delete(tmp[lastkey]);
+				return true;
+			}
+		}
+		return false;
+	};
+
+	/**
+	 * Make operations on a value in the hash tree `obj` according to `keys`.
+	 *
+	 * Example:
+	 *
+	 *     obj = { one: { a: 1 } };
+	 *     hashTree.use(obj, 'one.a').add(5).get();
+	 *     // => 6
+	 *
+	 * @param {Object} obj : Object to append `value` to lead defined by `keys`
+	 * @param {String|Array} keys : dot separated string or Array to gather `value` from hashtree object `obj`
+	 * @param {Number|Boolean} value : (optional) set value first
+	 * @return {Ops} object for operations
+	 * @see Ops
+	 */
+	hashTree.use = function (obj, keys, value) {
+		var self = {};
+		var tmp;
+		var ops;
+		
+		keys = splitKeys(keys) || [];
+		self.key = keys.pop();
+		self.ref = hashTree.get(obj, keys);
+		
+		if (typeof self.ref !== 'object') {
+			hashTree.set(obj, keys, {});
+			self.ref = hashTree.get(obj, keys);
+		}
+		if (value !== undefined) {
+			self.ref[self.key] = value;
+		}
+		
+		ops = new Ops(self.ref, self.key);
+		return ops;
+	};
+
+	/**
+	 * Sets all leafes of the hash tree on `obj` to `value`.
+	 *
+	 * Example:
+	 *
 	 *     obj = { one: { a: 1, b: 2, c: 3 } };
 	 *     hashTree.setAll(obj, 'one', 0);
 	 *     // => true; obj = { one: { a: 0, b: 0, c: 0 } }
-	 * 
-	 * @param {Object} obj Object to append `value` to lead defined by `keys`
-	 * @param {String|Array} keys dot separated string or Array to append value to hashtree object `obj`
-	 * @param {*} value The value to add
+	 *
+	 * @param {Object} obj : Object to append `value` to lead defined by `keys`
+	 * @param {String|Array} keys : dot separated string or Array to append value to hashtree object `obj`
+	 * @param {Any} value : The value to add
 	 */
 	hashTree.setAll = function (obj, keys, value){
-		var 
+		var
 			i,
 			tmp,
 			_obj = obj;
-		
+
 		keys = splitKeys(keys);
-		
+
 		if (obj === undefined || value === undefined) {
 			return;
 		}
@@ -150,45 +214,66 @@
 	};
 
 	/**
-	 * Deletes a branch of the hash tree on `obj`.
-	 * 
+	 * Sorts a hash tree with an optional `sorter` function.
+	 *
+	 * Sorting a hash tree does not make a lot of sense. It does not change anything.
+	 * But for human eyes, e.g. on exporting to YAML or JSON, sorted patterns are easier to read (at least for me).
+	 *
 	 * Example:
-	 * 
-	 *     obj = { one: { a: [1, 2, 3], b: 2, c: 3 } };
-	 *     hashTree.delete(obj, 'one.a');
-	 *     // => true; obj = { one: { b: 2, c: 3 } }
-	 * 
-	 * @param {Object} obj Object to append `value` to lead defined by `keys`
-	 * @param {String|Array} keys dot separated string or Array to append value to hashtree object `obj`
-	 * @return {Boolean} `true` if branch could be deleted; otherwise `false`
+	 *
+	 *     obj = { z: { y: 25, x: 24 }, a: { c: 2, b: 1 } }
+	 *     hashTree.sort(obj);
+	 *     // => { a: { b: 1, c: 2 }, z: { x: 24, y: 25 } }
+	 *
+	 * @param {Object} obj : Object to sort
+	 * @param {Function} sorter : sorting function with arguments (a, b)
+	 * @return {Object} sorted obj
 	 */
-	hashTree.delete = function (obj, keys){
-		var tmp, lastkey;
-		
-		keys = splitKeys(keys);
-		
-		if (keys) {
-			lastkey = keys.pop();
-			tmp = hashTree.get(obj, keys);
-			if (tmp !== undefined) {
-				delete(tmp[lastkey]);
-				return true;
+	hashTree.sort = function(obj, sorter) {
+		var
+			i,
+			a = [],
+			tmp = null;
+
+		if (obj && typeof(obj) === 'object' && obj !== null) {
+			if (typeof(obj.length) === 'number') {
+				// Array
+				tmp = [];
+				tmp = obj.map(function(p){
+					return hashTree.sort(p, sorter);
+				});
+			}
+			else {
+				// Object
+				tmp = {};
+				for (i in obj) {
+					if (obj.hasOwnProperty(i)) {
+						a.push(i);
+					}
+				}
+				a.sort(sorter).forEach(function(p){
+					tmp[p] = hashTree.sort(obj[p], sorter);
+				});
 			}
 		}
-		return false;
+		else {
+			tmp = obj;
+		}
+
+		return tmp;
 	};
 
 	/**
 	 * Compare `obj` with `base` and return the difference between `base` and `obj`.
 	 * Properties which are only in `base` will not be considered.
-	 * 
+	 *
 	 * Example:
-	 * 
+	 *
 	 *     base = { one: { a: 1, c: 3 } };
 	 *     obj  = { one: { a: 1, b: 2 } };
 	 *     hashTree.diffToBase(base, obj);
 	 *     // => { one: { b: 2 } }
-	 * 
+	 *
 	 * @param {Object} base
 	 * @param {Object} obj
 	 * @return {Object} difference between base and obj
@@ -200,30 +285,30 @@
 
 	/**
 	 * Obtain the difference from two hashtrees
-	 * 
+	 *
 	 * Example:
-	 * 
+	 *
 	 *     base = { one: { a: 1, c: 3 }, two: 2 };
 	 *     obj  = { one: { a: 1, b: 2 } };
 	 *     hashTree.diff(base, obj);
 	 *     // => { diff1: { one: { c: 3 }, two: 2 }, diff2: { one: { b: 2 } } }
-	 * 
-	 * @param {Object} obj1 first Object to compare
-	 * @param {Object} obj2 second Object to compare
-	 * @param {Array} keys (private)
-	 * @param {Object} diff1 (private) Difference of `obj1` to `obj2`
-	 * @param {Object} diff2 (private) Difference of `obj2` to `obj1`
+	 *
+	 * @param {Object} obj1 : first Object to compare
+	 * @param {Object} obj2 : second Object to compare
+	 * @param {Array} keys : (private)
+	 * @param {Object} diff1 : (private) Difference of `obj1` to `obj2`
+	 * @param {Object} diff2 : (private) Difference of `obj2` to `obj1`
 	 * @return {Object} {diff1: {Object}, diff2: {Object}}
 	 * @property {Object} diff1 Difference of `obj1` to `obj2`
 	 * @property {Object} diff2 Difference of `obj2` to `obj1`
 	 */
 	hashTree.diff = function (obj1, obj2, keys, diff1, diff2) {
 		var i;
-		
+
 		keys  = keys || [];
 		diff1 = diff1 || {};
 		diff2 = diff2 || {};
-		
+
 		if (obj1 && obj2) {
 			for (i in obj1) {
 				if (obj1.hasOwnProperty(i)) {
@@ -265,75 +350,6 @@
 	};
 
 	/**
-	 * Sorts a hash tree with an optional `sorter` function.
-	 * 
-	 * Sorting a hash tree does not make a lot of sense. It does not change anything.
-	 * But for human eyes, e.g. on exporting to YAML or JSON, sorted patterns are easier to read (at least for me).
-	 * 
-	 * Example:
-	 * 
-	 *     obj = { z: { y: 25, x: 24 }, a: { c: 2, b: 1 } }
-	 *     hashTree.sort(obj);
-	 *     // => { a: { b: 1, c: 2 }, z: { x: 24, y: 25 } }
-	 * 
-	 * @param {Object} obj Object to sort
-	 * @param {Function} sorter sorting function with arguments (a, b)
-	 * @return {Object} sorted obj
-	 */
-	hashTree.sort = function(obj, sorter) {
-		var 
-			i,
-			a = [],
-			tmp = null;
-		
-		if (obj && typeof(obj) === 'object' && obj !== null) {
-			if (typeof(obj.length) === 'number') {
-				// Array
-				tmp = [];
-				tmp = obj.map(function(p){
-					return hashTree.sort(p, sorter);
-				});
-			}
-			else { 
-				// Object
-				tmp = {};
-				for (i in obj) {
-					if (obj.hasOwnProperty(i)) {
-						a.push(i);
-					}
-				}
-				a.sort(sorter).forEach(function(p){ 
-					tmp[p] = hashTree.sort(obj[p], sorter);
-				});
-			}
-		}
-		else {
-			tmp = obj;
-		}
-		
-		return tmp;
-	};
-
-	/**
-	 * Normalize and split `keys` for `get` and `set` method
-	 * 
-	 * @private
-	 * @param {String|Array} keys
-	 */
-	var splitKeys = function (keys) {
-		
-		if (typeof(keys) === 'string') {
-			return keys.replace(/^\s*\.\s*/,'')
-				.replace(/(?:\s*\.\s*)+/g, '.')
-				.split('.');
-		}
-		else if (Array.isArray(keys)) {
-			return [].concat(keys);
-		}
-		return;
-	};
-
-	/**
 	 * @exports hashTree
 	 */
 	exports.hashTree = hashTree;
@@ -346,16 +362,38 @@
 	var HashTree = function (obj){
 		this._tree = obj || {};
 	};
-	
+
+	/**
+	 * Get value from HashTree using keys
+	 *
+	 * @see hashTree.get()
+	 * @param {String|Array} keys : dot separated string or Array to gather `value` from hashtree object `obj`
+	 * @return {Any} value : found using keys
+	 */
+	HashTree.prototype.get = function(keys) {
+		return hashTree.get(this._tree, keys);
+	};
+
+	/**
+	 * Set value on HashTree using keys
+	 *
+	 * @see hashTree.set()
+	 * @param {String|Array} keys : dot separated string or Array to gather `value` from hashtree object `obj`
+	 * @param {Any} value : The value to add
+	 * @return {Boolean} true if value was set, otherwise false
+	 */
+	HashTree.prototype.set = function(keys, value) {
+		return hashTree.set(this._tree, keys, value);
+	};
+
 	/**
 	 * Deletes a HashTree
-	 * 
+	 *
 	 * @see hashTree.delete()
 	 * @param {String|Array} keys dot separated string or Array to append value to hashtree object `obj`
 	 * @return {Boolean} `true` if branch could be deleted; otherwise `false`
 	 */
 	HashTree.prototype.delete = function(keys){
-		
 		if (keys) {
 			return hashTree.delete(this._tree, keys);
 		}
@@ -366,47 +404,6 @@
 	};
 
 	/**
-	 * Get value from HashTree using keys
-	 * 
-	 * @see hashTree.get()
-	 * @param {String|Array} keys dot separated string or Array to gather `value` from hashtree object `obj`
-	 * @return {*} value found using keys
-	 */
-	HashTree.prototype.get = function(keys) {
-		return hashTree.get(this._tree, keys);
-	};
-
-	/**
-	 * Set value on HashTree using keys
-	 * 
-	 * @see hashTree.set()
-	 * @param {String|Array} keys dot separated string or Array to gather `value` from hashtree object `obj`
-	 * @param {*} value The value to add
-	 * @return {Boolean} true if value was set, otherwise false
-	 */
-	HashTree.prototype.set = function(keys, value) {
-		return hashTree.set(this._tree, keys, value);
-	};
-
-	/**
-	 * Sets all leafes of the hash tree on `obj` to `value`.
-	 * 
-	 * Example:
-	 * 
-	 *     obj = { one: { a: 1, b: 2, c: 3 } };
-	 *     _hashTree = new HashTree(obj);
-	 *     _hashTree.setAll('one', 0);
-	 *     _hashTree.tree();
-	 *     // => { one: { a: 0, b: 0, c: 0 } }
-	 * 
-	 * @param {String|Array} keys dot separated string or Array to append value to hashtree object `obj`
-	 * @param {*} value The value to add
-	 */
-	HashTree.prototype.setAll = function (keys, value){
-		hashTree.setAll(this._tree, keys, value);
-	};
-
-	/**
 	 * Obtain the HashTree
 	 */
 	HashTree.prototype.tree = function() {
@@ -414,10 +411,40 @@
 	};
 
 	/**
+	 * Set value on HashTree using keys
+	 *
+	 * @see hashTree.use()
+	 * @param {String|Array} keys : dot separated string or Array to gather `value` from hashtree object `obj`
+	 * @param {Number|Boolean} value : (optional) set value first
+	 * @return {Object} internal object
+	 */
+	HashTree.prototype.use = function(keys, value) {
+		return hashTree.use(this._tree, keys, value);
+	};
+
+	/**
+	 * Sets all leafes of the hash tree on `obj` to `value`.
+	 *
+	 * Example:
+	 *
+	 *     obj = { one: { a: 1, b: 2, c: 3 } };
+	 *     ahashTree = new HashTree(obj);
+	 *     ahashTree.setAll('one', 0);
+	 *     ahashTree.tree();
+	 *     // => { one: { a: 0, b: 0, c: 0 } }
+	 *
+	 * @param {String|Array} keys : dot separated string or Array to append value to hashtree object `obj`
+	 * @param {Any} value : The value to add
+	 */
+	HashTree.prototype.setAll = function (keys, value){
+		hashTree.setAll(this._tree, keys, value);
+	};
+
+	/**
 	 * Sort the HashTree using optional `sorter` function
-	 * 
-	 * @see hashTree.sort() 
-	 * @param {Function} sorter sorting function with arguments (a, b)
+	 *
+	 * @see hashTree.sort()
+	 * @param {Function} sorter : sorting function with arguments (a, b)
 	 */
 	HashTree.prototype.sort = function(sorter) {
 		this._tree = hashTree.sort(this._tree, sorter);
@@ -428,5 +455,192 @@
 	 * @exports HashTree
 	 */
 	exports.HashTree = HashTree;
+
+	/**
+	 * Normalize and split `keys` for `get` and `set` method.
+	 * Splits by "." 
+	 *
+	 * @param {String|Array} keys
+	 * @api private
+	 */
+	function splitKeys (keys) {
+		if (typeof(keys) === 'string') {
+			return keys.replace(/^\s*\.\s*/,'')
+				.replace(/(?:\s*\.\s*)+/g, '.')
+				.split('.');
+		}
+		else if (Array.isArray(keys)) {
+			return [].concat(keys);
+		}
+		return;
+	}
+
+	/**
+	 * Helper class for hashTree.use
+	 * @param {Object} ref : reference in object
+	 * @param {String} key : key for value to change
+	 */
+	function Ops (ref, key) {
+		var tmp;
+		
+		this.ref = ref;
+		this.key = key;
+		
+		if (this.ref[this.key] === undefined) {
+			this.ref[this.key] = 0;
+		}
+		if (typeof this.ref[this.key] === 'string') {
+			// try to convert string to a number
+			tmp = parseInt(this.ref[this.key], 10);
+			if (! isNaN(tmp)) {
+				this.ref[this.key] = tmp;
+			}
+		}
+		this.isNumber = (typeof this.ref[this.key] === 'number');
+		this.isBoolean = (typeof this.ref[this.key] === 'boolean');
+		this.isString = (typeof this.ref[this.key] === 'string');
+		this.isArray = Array.isArray(this.ref[this.key]);
+	}
 	
-})(this.exports || this);
+	/**
+	 * increment 
+	 */
+	Ops.prototype.inc = function() {
+		if (this.isNumber) {
+			this.ref[this.key]++;
+		}
+		return this;
+	};
+	/**
+	 * decrement
+	 */
+	Ops.prototype.dec = function() {
+		if (this.isNumber) {
+			this.ref[this.key]--;
+		}
+		return this;
+	};
+	/**
+	 * add `val` 
+	 * @param {Number} val
+	 */
+	Ops.prototype.add = function(val) {
+		if (this.isNumber || this.isString) {
+			this.ref[this.key] += val;
+		}
+		return this;
+	};
+	/**
+	 * subtract `val`
+	 * @param {Number} val
+	 */
+	Ops.prototype.sub = function(val) {
+		if (this.isNumber) {
+			this.ref[this.key] -= val;
+		}
+		return this;
+	};
+	/**
+	 * multiply by `val`
+	 * @param {Number} val
+	 */
+	Ops.prototype.mul = function(val) {
+		if (this.isNumber) {
+			this.ref[this.key] *= val;
+		}
+		return this;
+	};
+	/**
+	 * divide by `val`
+	 * @param {Number} val
+	 */
+	Ops.prototype.div = function(val) {
+		if (this.isNumber) {
+			this.ref[this.key] /= val;
+		}
+		return this;
+	};
+	/**
+	 * modulo by `val`
+	 * @param {Number} val
+	 */
+	Ops.prototype.mod = function(val) {
+		if (this.isNumber) {
+			this.ref[this.key] %= val;
+		}
+		return this;
+	};
+	/**
+	 * logical-or by `val`
+	 * @param {Number|Boolean} val
+	 */
+	Ops.prototype.or = function(val) {
+		if (this.isNumber || this.isBoolean) {
+			this.ref[this.key] |= val;
+		}
+		return this;
+	};
+	/**
+	 * logical-and by `val`
+	 * @param {Number|Boolean} val
+	 */
+	Ops.prototype.and = function(val) {
+		if (this.isNumber || this.isBoolean) {
+			this.ref[this.key] &= val;
+		}
+		return this;
+	};
+	/**
+	 * logical-not by `val` if `val` is Boolean
+	 * logical-bitwise-not by `val` if `val` is Number
+	 * @param {Number|Boolean} val
+	 */
+	Ops.prototype.not = function() { // bitwise not if number
+		if (this.isNumber) {
+			this.ref[this.key] = ~this.ref[this.key];
+		} 
+		else if (this.isBoolean){
+			this.ref[this.key] = !this.ref[this.key];
+		}
+		return this;
+	};
+	/**
+	 * returns the computed value
+	 * @return {Number|Boolean} 
+	 */
+	Ops.prototype.get = function() {
+		return this.ref[this.key];
+	};
+	/**
+	 * set to `val`
+	 * @param {Any} val
+	 */
+	Ops.prototype.set = function(val) {
+		this.ref[this.key] = val;
+	};
+
+	var M = {
+		hashTree: hashTree,
+		HashTree: HashTree
+	};
+
+	// Node.js
+	if (typeof module !== 'undefined' && module.exports) {
+		module.exports = M;
+	}
+	// AMD / RequireJS
+	else if (typeof define !== 'undefined' && define.amd) {
+		define([], function () {
+			return M;
+		});
+	}
+	// included in browser via <script> tag
+	else if (typeof exports.Window !== 'undefined') {
+		for (var i in M) {
+			if (!exports[i]) {
+				exports[i] = M[i];
+			}
+		}
+	}
+
+})(this);

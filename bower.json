@@ -14,16 +14,14 @@
     "url": "https://github.com/commenthol/hashtree"
   },
   "homepage": "https://github.com/commenthol/hashtree",
-  "bugs": {
-    "url": "http://github.com/commenthol/hashtree/issues"
-  },
-  "devDependencies": {
-    "mocha": "^2.0.1",
-    "jshint": "latest"
-  },
-  "scripts": {
-    "test": "mocha",
-    "lint": "jshint **.js test/*.js",
-    "dox": "apidox -i hashtree.js -o docs/documentation.md"
-  }
+  "moduleType": [
+    "amd",
+    "node",
+    "globals"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ]
 }

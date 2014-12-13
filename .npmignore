@@ -2,5 +2,5 @@
 .npmignore
 .gitignore
 *.tgz
-sample.js
 *.sh
+tmp/

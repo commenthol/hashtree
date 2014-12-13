@@ -1,14 +1,13 @@
-/*globals suite, test*/
+/*globals describe, it*/
 
 "use strict";
 
-var 
-	assert = require('assert'),
+var assert = require('assert'),
 	hashTree = require('../hashtree.js').hashTree,
 	HashTree = require('../hashtree.js').HashTree;
 
 
-suite ('hashTree.get', function (){
+describe ('hashTree.get', function (){
 
 	var obj = {
 		one:   { a: 1 },
@@ -17,84 +16,84 @@ suite ('hashTree.get', function (){
 		four:  { 4: { obj: null } }
 	};
 
-	test ('- find not existing', function (){
+	it ('- find not existing', function (){
 		var r;
 		r = hashTree.get(obj, "not.there");
 		
 		assert.deepEqual(r, undefined);
 	});
 
-	test ('- find empty', function (){
+	it ('- find empty', function (){
 		var r;
 		r = hashTree.get(obj, "");
 		
 		assert.deepEqual(r, undefined);
 	});
 
-	test ('- find undefined', function (){
+	it ('- find undefined', function (){
 		var r;
 		r = hashTree.get(obj);
 		
 		assert.deepEqual(r, undefined);
 	});
 
-	test ('- find one a', function (){
+	it ('- find one a', function (){
 		var r;
 		r = hashTree.get(obj, "one.a");
 		
 		assert.deepEqual(r, 1);
 	});
 
-	test ('- find two b', function (){
+	it ('- find two b', function (){
 		var r;
 		r = hashTree.get(obj, "two .b");
 		
 		assert.deepEqual(r, "bee");
 	});
 
-	test ('- find three', function (){
+	it ('- find three', function (){
 		var r;
 		r = hashTree.get(obj, "three");
 		
 		assert.deepEqual(r, {"c":["cee","C"]});
 	});
 
-	test ('- find three c', function (){
+	it ('- find three c', function (){
 		var r;
 		r = hashTree.get(obj, "three.c");
 		
 		assert.deepEqual(r, ["cee","C"]);
 	});
 
-	test ('- find non existing leaf', function (){
+	it ('- find non existing leaf', function (){
 		var r;
 		r = hashTree.get(obj, "three.nothing");
 		
 		assert.deepEqual(r, undefined);
 	});
 
-	test ('- find four 4', function (){
+	it ('- find four 4', function (){
 		var r;
 		r = hashTree.get(obj, "four.4");
 		
 		assert.deepEqual(r, {"obj":null});
 	});
 
-	test ('- find four 4; array notation', function (){
+	it ('- find four 4; array notation', function (){
 		var r;
 		r = hashTree.get(obj, ['four','4']);
 		
 		assert.deepEqual(r, {"obj":null});
 	});
 
-	test ('- find four 4 with bad spacing', function (){
+	it ('- find four 4 with bad spacing', function (){
 		var r;
 		r = hashTree.get(obj, "four ..  4");
 		
 		assert.deepEqual(r, {"obj":null});
 	});
 
-	suite ('- using reserved keywords', function(){
+	describe ('- using reserved keywords', function(){
 
 		var obj = {
 			"this": { 
@@ -103,14 +102,14 @@ suite ('hashTree.get', function (){
 			}
 		};
 		
-		test ('- find constructor ', function (){
+		it ('- find constructor ', function (){
 			var r;
 
 			r = hashTree.get(obj, "this.constructor");
 			assert.deepEqual(r, 0);
 		});
 
-		test ('- find constructor ', function (){
+		it ('- find constructor ', function (){
 			var r;
 			
 			r = hashTree.get(obj, "this.prototype.this");
@@ -121,7 +120,7 @@ suite ('hashTree.get', function (){
 });
 
 
-suite ('HashTree.get', function (){
+describe ('HashTree.get', function (){
 
 	var obj = {
 		one:   { a: 1 },
@@ -131,73 +130,73 @@ suite ('HashTree.get', function (){
 	};
 	var ht = new HashTree(obj);
 
-	test ('- find not existing', function (){
+	it ('- find not existing', function (){
 		var r = ht.get("not.there");
 		
 		assert.deepEqual(r, undefined);
 	});
 
-	test ('- find empty', function (){
+	it ('- find empty', function (){
 		var r = ht.get("");
 		
 		assert.deepEqual(r, undefined);
 	});
 
-	test ('- find undefined', function (){
+	it ('- find undefined', function (){
 		var r = ht.get();
 		
 		assert.deepEqual(r, undefined);
 	});
 
-	test ('- find one a', function (){
+	it ('- find one a', function (){
 		var r = ht.get("one.a");
 		
 		assert.deepEqual(r, 1);
 	});
 
-	test ('- find two b', function (){
+	it ('- find two b', function (){
 		var r = ht.get("two.b");
 		
 		assert.deepEqual(r, "bee");
 	});
 
-	test ('- find three', function (){
+	it ('- find three', function (){
 		var r = ht.get("three");
 		
 		assert.deepEqual(r, {"c":["cee","C"]});
 	});
 
-	test ('- find three c', function (){
+	it ('- find three c', function (){
 		var r = ht.get("three.c");
 		
 		assert.deepEqual(r, ["cee","C"]);
 	});
 
-	test ('- find non existing leaf', function (){
+	it ('- find non existing leaf', function (){
 		var r = ht.get("three.nothing");
 		
 		assert.deepEqual(r, undefined);
 	});
 
-	test ('- find four 4', function (){
+	it ('- find four 4', function (){
 		var r = ht.get("four.4");
 		
 		assert.deepEqual(r, {"obj":null});
 	});
 
-	test ('- find four 4; array notation', function (){
+	it ('- find four 4; array notation', function (){
 		var r = ht.get(['four','4']);
 		
 		assert.deepEqual(r, {"obj":null});
 	});
 
-	test ('- find four 4 with bad spacing', function (){
+	it ('- find four 4 with bad spacing', function (){
 		var r = ht.get("four ..   4");
 		
 		assert.deepEqual(r, {"obj":null});
 	});
 
-	suite ('- using reserved keywords', function(){
+	describe ('- using reserved keywords', function(){
 
 		var obj = {
 			"this": { 
@@ -207,13 +206,13 @@ suite ('HashTree.get', function (){
 		};
 		var ht = new HashTree(obj);
 		
-		test ('- find constructor ', function (){
+		it ('- find constructor ', function (){
 			var r = ht.get("this.constructor");
 			
 			assert.deepEqual(r, 0);
 		});
 
-		test ('- find constructor ', function (){
+		it ('- find constructor ', function (){
 			var r = ht.get("this.prototype.this");
 			
 			assert.deepEqual(r, 1);

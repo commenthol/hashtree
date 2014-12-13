@@ -1,4 +1,4 @@
-/*globals suite, test*/
+/*globals describe, it*/
 
 "use strict";
 
@@ -11,9 +11,9 @@ function sortDesc(a, b) {
 	return (a > b) ? -1 : ( a == b ? 0 : 1);
 }
 
-suite ('hashTree.sort', function (){
+describe ('hashTree.sort', function (){
 
-	test ('- sort empty object', function (){
+	it ('- sort empty object', function (){
 		
 		var obj = {};
 		var result = hashTree.sort(obj);
@@ -23,7 +23,7 @@ suite ('hashTree.sort', function (){
 		
 	});
 
-	test ('- sort object', function (){
+	it ('- sort object', function (){
 		
 		var obj = {
 			"z":{"zz":3,"zm":2,"za":1},
@@ -40,7 +40,7 @@ suite ('hashTree.sort', function (){
 		assert.equal(JSON.stringify(result), JSON.stringify(expected));
 	});
 
-	test ('- sort object with custom sorter', function (){
+	it ('- sort object with custom sorter', function (){
 		
 		var obj = { 
 			"z": { "az": 3, "am": 2, "aa": 1 },
@@ -58,7 +58,7 @@ suite ('hashTree.sort', function (){
 		assert.equal(JSON.stringify(result), JSON.stringify(expected));
 	});
 
-	test ('- sort HashTree with custom sorter', function (){
+	it ('- sort HashTree with custom sorter', function (){
 		
 		var obj = { 
 			"z": { "az": 3, "am": 2, "aa": 1 },

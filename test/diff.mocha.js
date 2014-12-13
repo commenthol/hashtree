@@ -1,14 +1,13 @@
-/*globals suite, test*/
+/*globals describe, it*/
 
 "use strict";
 
-var
-	assert = require('assert'),
+var assert = require('assert'),
 	hashTree = require('../hashtree.js').hashTree;
 
-suite('object differences', function(){
+describe('object differences', function(){
 	
-	test('- compare empty', function(){
+	it('- compare empty', function(){
 		
 		var 
 			o1 = {},
@@ -20,7 +19,7 @@ suite('object differences', function(){
 		assert.deepEqual(result, expected);
 	});
 	
-	test('- compare only in 1', function(){
+	it('- compare only in 1', function(){
 		
 		var 
 			o1 = { a: 'a' },
@@ -32,7 +31,7 @@ suite('object differences', function(){
 		assert.deepEqual(result, expected);
 	});
 	
-	test('- compare only in 2', function(){
+	it('- compare only in 2', function(){
 		
 		var 
 			o1 = {},
@@ -44,7 +43,7 @@ suite('object differences', function(){
 		assert.deepEqual(result, expected);
 	});
 
-	test('- compare different properties', function(){
+	it('- compare different properties', function(){
 		
 		var 
 			o1 = { a: 0 },
@@ -56,7 +55,7 @@ suite('object differences', function(){
 		assert.deepEqual(result, expected);
 	});
 
-	test('- compare different and common properties', function(){
+	it('- compare different and common properties', function(){
 		
 		var 
 			o1 = { a: 0, c: 3 },
@@ -68,7 +67,7 @@ suite('object differences', function(){
 		assert.deepEqual(result, expected);
 	});
 	
-	/*test('- compare different and common properties with reserved keywords', function(){
+	/*it('- compare different and common properties with reserved keywords', function(){
 		
 		var 
 			o1 = { "constructor": 0, c: 3 },
