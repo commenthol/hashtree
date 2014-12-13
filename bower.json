@@ -3,25 +3,30 @@
   "version": "0.5.0",
   "description": "Build up \"hash of hashes\" in javascript and access the data contained.",
   "main": "hashtree.js",
-  "author": "commenthol",
   "license": "MIT",
   "keywords": [
     "hash",
-    "hashtree"
+    "hashtree",
+    "hash-of-hashes"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/commenthol/hashtree"
+    "url": "git://github.com/commenthol/hashtree.git"
   },
   "homepage": "https://github.com/commenthol/hashtree",
   "moduleType": [
     "amd",
-    "node",
-    "globals"
+    "globals",
+    "node"
   ],
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components"
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "authors": [
+    "commenthol <commenthol@gmail.com>"
   ]
 }

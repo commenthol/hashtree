@@ -1,13 +1,14 @@
 {
   "name": "hashtree",
-  "version": "0.5.0",
-  "repo": "commenthol/hashtree",
+  "repository": "commenthol/hashtree",
   "description": "Build up \"hash of hashes\" in javascript and access the data contained.",
+  "version": "0.5.0",
   "main": "hashtree.js",
-  "author": "commenthol",
+  "author": "commenthol <commentho@gmail.com>",
   "license": "MIT",
   "keywords": [
     "hash",
-    "hashtree"
+    "hashtree",
+    "hash-of-hashes"
   ]
 }

@@ -3,11 +3,12 @@
   "version": "0.5.0",
   "description": "Build up \"hash of hashes\" in javascript and access the data contained.",
   "main": "hashtree.js",
-  "author": "commenthol",
+  "author": "commenthol <commenthol@gmail.com>",
   "license": "MIT",
   "keywords": [
     "hash",
-    "hashtree"
+    "hashtree",
+    "hash-of-hashes"
   ],
   "repository": {
     "type": "git",
@@ -17,13 +18,18 @@
   "bugs": {
     "url": "http://github.com/commenthol/hashtree/issues"
   },
-  "devDependencies": {
-    "mocha": "^2.0.1",
-    "jshint": "latest"
-  },
   "scripts": {
     "test": "mocha",
     "lint": "jshint **.js test/*.js",
     "dox": "apidox -i hashtree.js -o docs/documentation.md"
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "^2.0.1",
+    "jshint": "latest"
   }
 }
