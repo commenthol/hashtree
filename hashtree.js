@@ -5,6 +5,8 @@
  * @license Available under MIT license
  */
 
+/* globals define */
+
 ;(function(exports){
 	"use strict";
 
@@ -25,7 +27,6 @@
 	 */
 	hashTree.get = function (obj, keys){
 		var i,
-			last,
 			tmp = obj;
 
 		keys = splitKeys(keys);
@@ -151,9 +152,8 @@
 	 */
 	hashTree.use = function (obj, keys, value) {
 		var self = {};
-		var tmp;
 		var ops;
-		
+
 		keys = splitKeys(keys) || [];
 		self.key = keys.pop();
 		self.ref = hashTree.get(obj, keys);
@@ -170,7 +170,7 @@
 		if (value !== undefined) {
 			self.ref[self.key] = value;
 		}
-		
+
 		ops = new Ops(self.ref, self.key);
 		return ops;
 	};
@@ -206,6 +206,7 @@
 
 		if (_obj && typeof(_obj) === 'object' && tmp !== null && !Array.isArray(obj)) {
 			for (i in _obj) {
+				// istanbul ignore else
 				if (_obj.hasOwnProperty(i)) {
 					if (typeof(_obj[i]) === 'object') {
 						hashTree.setAll(_obj[i], undefined, value);
@@ -241,17 +242,15 @@
 			tmp = null;
 
 		if (obj && typeof(obj) === 'object' && obj !== null) {
-			if (typeof(obj.length) === 'number') {
+			if (Array.isArray(obj)) {
 				// Array
-				tmp = [];
-				tmp = obj.map(function(p){
-					return hashTree.sort(p, sorter);
-				});
+				tmp = obj.sort(sorter);
 			}
 			else {
 				// Object
 				tmp = {};
 				for (i in obj) {
+					// istanbul ignore else
 					if (obj.hasOwnProperty(i)) {
 						a.push(i);
 					}
@@ -314,8 +313,10 @@
 		diff1 = diff1 || {};
 		diff2 = diff2 || {};
 
+		// istanbul ignore else
 		if (obj1 && obj2) {
 			for (i in obj1) {
+				// istanbul ignore else
 				if (obj1.hasOwnProperty(i)) {
 					if (obj2.hasOwnProperty(i)){
 						if (typeof(obj1[i]) === 'object' && typeof(obj2[i]) === 'object') {
@@ -463,7 +464,7 @@
 
 	/**
 	 * Normalize and split `keys` for `get` and `set` method.
-	 * Splits by "." 
+	 * Splits by "."
 	 *
 	 * @param {String|Array} keys
 	 * @api private
@@ -487,10 +488,10 @@
 	 */
 	function Ops (ref, key) {
 		var tmp;
-		
+
 		this.ref = ref;
 		this.key = key;
-		
+
 		if (this.ref[this.key] === undefined) {
 			this.ref[this.key] = 0;
 		}
@@ -507,19 +508,21 @@
 		this.isArray = Array.isArray(this.ref[this.key]);
 		this.isObject = (!this.isArray && typeof this.ref[this.key] === 'object');
 	}
-	
+
 	/**
 	 * return keys of a hash tree branch
 	 * @return {Array} array of keys
 	 */
 	Ops.prototype.keys = function() {
 		if (this.isObject) {
-			return Object.keys(this.ref[this.key]) || [];
+			return Object.keys(this.ref[this.key]);
+		} else {
+			return [];
 		}
 	};
-	
+
 	/**
-	 * increment 
+	 * increment
 	 */
 	Ops.prototype.inc = function() {
 		if (this.isNumber) {
@@ -537,7 +540,7 @@
 		return this;
 	};
 	/**
-	 * add `val` 
+	 * add `val`
 	 * @param {Number} val
 	 */
 	Ops.prototype.add = function(val) {
@@ -614,25 +617,11 @@
 	Ops.prototype.not = function() { // bitwise not if number
 		if (this.isNumber) {
 			this.ref[this.key] = ~this.ref[this.key];
-		} 
+		}
 		else if (this.isBoolean){
 			this.ref[this.key] = !this.ref[this.key];
 		}
 		return this;
-	};
-	/**
-	 * returns the computed value
-	 * @return {Number|Boolean} 
-	 */
-	Ops.prototype.get = function() {
-		return this.ref[this.key];
-	};
-	/**
-	 * set to `val`
-	 * @param {Any} val
-	 */
-	Ops.prototype.set = function(val) {
-		this.ref[this.key] = val;
 	};
 
 	var M = {
@@ -640,6 +629,7 @@
 		HashTree: HashTree
 	};
 
+	/* istanbul ignore next */
 	// Node.js
 	if (typeof module !== 'undefined' && module.exports) {
 		module.exports = M;

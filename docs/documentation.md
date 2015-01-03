@@ -34,8 +34,6 @@ _Source: [hashtree.js](../hashtree.js)_
 - <a name="toc_opsprototypeorval"></a>[Ops.prototype.or](#opsprototypeorval)
 - <a name="toc_opsprototypeandval"></a>[Ops.prototype.and](#opsprototypeandval)
 - <a name="toc_opsprototypenotval"></a>[Ops.prototype.not](#opsprototypenotval)
-- <a name="toc_opsprototypeget"></a>[Ops.prototype.get](#opsprototypeget)
-- <a name="toc_opsprototypesetval"></a>[Ops.prototype.set](#opsprototypesetval)
 
 <a name="hashtree"></a>
 
@@ -488,26 +486,6 @@ logical-bitwise-not by `val` if `val` is Number
 **Parameters:**
 
 - `{Number | Boolean} val`
-
-<sub>Go: [TOC](#tableofcontents) | [Ops.prototype](#toc_opsprototype)</sub>
-
-# Ops.prototype.get()
-
-> returns the computed value
-
-**Return:**
-
-`{Number | Boolean}`
-
-<sub>Go: [TOC](#tableofcontents) | [Ops.prototype](#toc_opsprototype)</sub>
-
-# Ops.prototype.set(val)
-
-> set to `val`
-
-**Parameters:**
-
-- `{Any} val`
 
 <sub>Go: [TOC](#tableofcontents) | [Ops.prototype](#toc_opsprototype)</sub>
 

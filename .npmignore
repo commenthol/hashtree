@@ -1,6 +1,6 @@
-.travis.yml
-.npmignore
-.gitignore
-*.tgz
-*.sh
-tmp/
+/node_modules
+/coverage
+/tmp
+/*.tgz
+/*.log
+/.*

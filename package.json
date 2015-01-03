@@ -1,6 +1,6 @@
 {
   "name": "hashtree",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Build up \"hash of hashes\" in javascript and access the data contained.",
   "main": "hashtree.js",
   "author": "commenthol <commenthol@gmail.com>",
@@ -20,7 +20,8 @@
   },
   "scripts": {
     "test": "mocha",
-    "lint": "jshint **.js test/*.js",
+    "lint": "jshint --show-non-errors *.js */*.js",
+    "cover": "istanbul cover _mocha --report lcov --report text -- -R dot --check-leaks test/*.mocha.js",
     "dox": "apidox -i hashtree.js -o docs/documentation.md"
   },
   "directories": {

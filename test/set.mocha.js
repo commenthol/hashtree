@@ -2,7 +2,7 @@
 
 "use strict";
 
-var 
+var
 	assert = require('assert'),
 	hashTree = require('../hashtree.js').hashTree,
 	HashTree = require('../hashtree.js').HashTree;
@@ -12,7 +12,7 @@ describe ('hashTree.set', function (){
 	describe ('- set on non existing object', function (){
 		var obj;
 		var r = hashTree.set(obj, "it.it.it", 1);
-		
+
 		it('- shall return false', function(){
 			assert.equal(r, false);
 		});
@@ -24,7 +24,7 @@ describe ('hashTree.set', function (){
 	describe ('- set it it it to 0', function (){
 		var obj = {};
 		var r = hashTree.set(obj, "it.it.it", 0);
-		
+
 		it('- shall return true', function(){
 			assert.equal(r, true);
 		});
@@ -36,7 +36,7 @@ describe ('hashTree.set', function (){
 	describe ('- set it it it to ""', function (){
 		var obj = {};
 		var r = hashTree.set(obj, "it.it.it", "");
-		
+
 		it('- shall return true', function(){
 			assert.equal(r, true);
 		});
@@ -48,7 +48,7 @@ describe ('hashTree.set', function (){
 	describe ('- set it it it to {}', function (){
 		var obj = {};
 		var r = hashTree.set(obj, "it.it.it", {});
-		
+
 		it('- shall return true', function(){
 			assert.equal(r, true);
 		});
@@ -62,11 +62,11 @@ describe ('hashTree.set', function (){
 			r,
 			obj = { it: { it: 1 }};
 		r = hashTree.set(obj, "it", 2);
-		
+
 		it('- shall return false', function(){
-			assert.equal(r, false);	
+			assert.equal(r, false);
 		});
-		
+
 		it('- shall not overwrite the existing leaf', function() {
 			assert.deepEqual(obj, {"it": { "it": 1 } });
 		});
@@ -77,11 +77,11 @@ describe ('hashTree.set', function (){
 			r,
 			obj = { it: 2 };
 		r = hashTree.set(obj, "it.it", 1);
-		
+
 		it('- shall return false', function(){
-			assert.equal(r, false);	
+			assert.equal(r, false);
 		});
-		
+
 		it('- shall not overwrite the existing value', function() {
 			assert.deepEqual(obj, {"it":2});
 		});
@@ -92,11 +92,11 @@ describe ('hashTree.set', function (){
 			r,
 			obj = { it: { it: [ 1 ] }};
 		r = hashTree.set(obj, "it", [ 1, 2 ]);
-		
+
 		it('- shall return true', function(){
-			assert.equal(r, true);	
+			assert.equal(r, true);
 		});
-		
+
 		it('- shall overwrite the existing leaf', function() {
 			assert.deepEqual(obj, { "it": [ 1, 2 ] } );
 		});
@@ -107,11 +107,11 @@ describe ('hashTree.set', function (){
 			r,
 			obj = { it: { it: 1 }};
 		r = hashTree.set(obj, "it", { "overwrite": 1 });
-		
+
 		it('- shall return true', function(){
-			assert.equal(r, true);	
+			assert.equal(r, true);
 		});
-		
+
 		it('- shall not overwrite the existing leaf', function() {
 			assert.deepEqual(obj, {"it":{"overwrite":1}});
 		});
@@ -122,11 +122,11 @@ describe ('hashTree.set', function (){
 			r,
 			obj = { it: { it: null }};
 		r = hashTree.set(obj, "it .it", { "overwrite": 1 });
-		
+
 		it('- shall return true', function(){
-			assert.equal(r, true);	
+			assert.equal(r, true);
 		});
-		
+
 		it('- shall not overwrite the existing leaf', function() {
 			assert.deepEqual(obj, {"it":{"it":{"overwrite":1}}});
 		});
@@ -137,11 +137,11 @@ describe ('hashTree.set', function (){
 			r,
 			obj = { it: { it: {} }};
 		r = hashTree.set(obj, "it .it", { "overwrite": 1 });
-		
+
 		it('- shall return true', function(){
-			assert.equal(r, true);	
+			assert.equal(r, true);
 		});
-		
+
 		it('- shall not overwrite the existing leaf', function() {
 			assert.deepEqual(obj, {"it":{"it":{"overwrite":1}}});
 		});
@@ -154,21 +154,21 @@ describe ('hashTree.set', function (){
 		r = hashTree.set(obj, "it", 1);
 
 		it('- shall return true', function(){
-			assert.equal(r, true);	
+			assert.equal(r, true);
 		});
-		
+
 		it('- shall set the new value', function() {
 			assert.deepEqual(obj, {"it": 1});
 		});
 	});
-	
+
 	it ('- extending', function (){
 		var obj = {};
 		hashTree.set(obj, "one.it", 1);
 		hashTree.set(obj, "one.zero", 0);
 		hashTree.set(obj, "two", 2);
 		hashTree.set(obj, "three", "3");
-		
+
 		assert.deepEqual(obj, {"one":{"it":1, "zero":0},"two":2,"three":"3"});
 	});
 
@@ -177,26 +177,25 @@ describe ('hashTree.set', function (){
 		hashTree.set(obj, ['one','it'], 1);
 		hashTree.set(obj, ['two', 'next', 'again'], 2);
 		hashTree.set(obj, ['three', 'is a string'], "3");
-		
+
 		assert.deepEqual(obj, {"one":{"it":1},"two":{"next":{"again":2}},"three":{"is a string":"3"}});
 	});
 
 	it ('- set false', function (){
 		var obj = {};
 		hashTree.set(obj, "one.it", false);
-		
+
 		assert.deepEqual(obj, { one: { it: false }});
 	});
 
 	it ('- set undefined', function (){
 		var obj = {};
 		hashTree.set(obj, "one.it", undefined);
-		
+
 		assert.deepEqual(obj, {});
 	});
 
 	it ('- set value using reserved keywords', function (){
-		var r;
 		var obj = {
 			"this": {}
 		};
@@ -223,7 +222,7 @@ describe ('HashTree.set', function (){
 	describe ('- set it it it to 0', function (){
 		var ht = new HashTree();
 		var r = ht.set("it.it.it", 0);
-		
+
 		it('- shall return true', function(){
 			assert.equal(r, true);
 		});
@@ -235,7 +234,7 @@ describe ('HashTree.set', function (){
 	describe ('- set it it it to ""', function (){
 		var ht = new HashTree();
 		var r = ht.set("it.it.it", "");
-		
+
 		it('- shall return true', function(){
 			assert.equal(r, true);
 		});
@@ -247,7 +246,7 @@ describe ('HashTree.set', function (){
 	it ('- set it it it to {}', function (){
 		var ht = new HashTree();
 		var r = ht.set("it.it.it", {});
-		
+
 		it('- shall return true', function(){
 			assert.equal(r, true);
 		});
@@ -260,7 +259,7 @@ describe ('HashTree.set', function (){
 		var ht = new HashTree();
 		ht.set("it,it", 1);
 		var r = ht.set("it", 2);
-		
+
 		it('- shall return false', function(){
 			assert.equal(r, false);
 		});
@@ -274,7 +273,7 @@ describe ('HashTree.set', function (){
 		ht.set("one.it", 1);
 		ht.set("two", 2);
 		ht.set("three", "3");
-		
+
 		assert.deepEqual(ht.tree(), {"one":{"it":1},"two":2,"three":"3"});
 	});
 
@@ -283,37 +282,37 @@ describe ('HashTree.set', function (){
 		ht.set(['one','it'], 1);
 		ht.set(['two', 'next', 'again'], 2);
 		ht.set(['three', 'is a string'], "3");
-		
+
 		assert.deepEqual(ht.tree(), {"one":{"it":1},"two":{"next":{"again":2}},"three":{"is a string":"3"}});
 	});
 
 	it ('- set false', function (){
 		var ht = new HashTree();
 		ht.set("one.it", false);
-		
+
 		assert.deepEqual(ht.tree(), { one: { it: false }});
 	});
 
 	it ('- delete and set', function (){
 		var ht = new HashTree({ "one": 1 });
-		
+
 		ht.delete();
 		ht.set("two", 2);
-		
+
 		assert.deepEqual(ht.tree(), { two: 2 });
 	});
 
 	it ('- set undefined', function (){
 		var ht = new HashTree();
 		ht.set("one.it", undefined);
-		
+
 		assert.deepEqual(ht.tree(), {});
 	});
 
 	it ('- set value using reserved keywords', function (){
 		var obj = {"this": {}};
 		var ht = new HashTree(obj);
-		
+
 		ht.set("this.constructor", 1);
 		ht.set("this.prototype", "a");
 		assert.deepEqual(ht.tree(), {"this":{"constructor":1,"prototype":"a"}});
