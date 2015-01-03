@@ -2,7 +2,7 @@
   "name": "hashtree",
   "repository": "commenthol/hashtree",
   "description": "Build up \"hash of hashes\" in javascript and access the data contained.",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "main": "hashtree.js",
   "author": "commenthol <commentho@gmail.com>",
   "license": "MIT",

@@ -286,6 +286,45 @@ describe ('hashTree.use', function (){
 		});
 	});
 
+	describe ('get and set', function(){
+		it('get number value', function(){
+			var obj = { one: { a: 11 } };
+			var exp = 11;
+			var res = hashTree.use(obj, 'one.a').get();
+			assert.strictEqual(res, exp);
+		});
+		it('get string value converted to number', function(){
+			var obj = { one: { a: "10" } };
+			var exp = 10;
+			var res = hashTree.use(obj, 'one.a').get();
+			assert.strictEqual(res, exp);
+		});
+		it('get string value ', function(){
+			var obj = { one: { a: "10a" } };
+			var exp = "10a";
+			var res = hashTree.use(obj, 'one.a').get();
+			assert.strictEqual(res, exp);
+		});
+		it('set number value', function(){
+			var obj = { one: { a: 11 } };
+			var exp = 11;
+			var res = hashTree.use(obj, 'one.a').set(exp).get();
+			assert.strictEqual(res, exp);
+		});
+		it('set string value', function(){
+			var obj = { one: { a: "10a" } };
+			var exp = "10a";
+			var res = hashTree.use(obj, 'one.a').set(exp).get();
+			assert.strictEqual(res, exp);
+		});
+		it('set string value and convert to number', function(){
+			var obj = { one: { a: "10" } };
+			var exp = 20;
+			var res = hashTree.use(obj, 'one.a').set(exp).get();
+			assert.strictEqual(res, exp);
+		});
+	});
+
 	describe ('keys', function(){
 		it ('get keys on undefined obj', function(){
 			var obj;

@@ -1,6 +1,6 @@
 {
   "name": "hashtree",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Build up \"hash of hashes\" in javascript and access the data contained.",
   "main": "hashtree.js",
   "license": "MIT",

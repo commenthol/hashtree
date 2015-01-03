@@ -487,27 +487,36 @@
 	 * @param {String} key : key for value to change
 	 */
 	function Ops (ref, key) {
-		var tmp;
-
 		this.ref = ref;
 		this.key = key;
 
 		if (this.ref[this.key] === undefined) {
 			this.ref[this.key] = 0;
 		}
-		if (typeof this.ref[this.key] === 'string') {
-			// try to convert string to a number
-			tmp = parseInt(this.ref[this.key], 10);
-			if (! isNaN(tmp)) {
-				this.ref[this.key] = tmp;
-			}
-		}
+		this._toNumber();
+
 		this.isNumber = (typeof this.ref[this.key] === 'number');
 		this.isBoolean = (typeof this.ref[this.key] === 'boolean');
 		this.isString = (typeof this.ref[this.key] === 'string');
 		this.isArray = Array.isArray(this.ref[this.key]);
 		this.isObject = (!this.isArray && typeof this.ref[this.key] === 'object');
 	}
+
+	/**
+	 * Try to convert value to a Number
+	 * @private
+	 */
+	Ops.prototype._toNumber = function() {
+		var tmp = this.ref[this.key];
+		if (typeof tmp === 'string' && /^\d+$/.test(tmp)) {
+			// try to convert string to a number
+			tmp = parseInt(tmp, 10);
+			// istanbul ignore else
+			if (! isNaN(tmp)) {
+				this.ref[this.key] = tmp;
+			}
+		}
+	};
 
 	/**
 	 * return keys of a hash tree branch
@@ -621,6 +630,22 @@
 		else if (this.isBoolean){
 			this.ref[this.key] = !this.ref[this.key];
 		}
+		return this;
+	};
+	/**
+	 * returns the computed value
+	 * @return {Number|Boolean}
+	 */
+	Ops.prototype.get = function() {
+		return this.ref[this.key];
+	};
+	/**
+	 * set to `val`
+	 * @param {Any} val
+	 */
+	Ops.prototype.set = function(val) {
+		this.ref[this.key] = val;
+		this._toNumber();
 		return this;
 	};
 
