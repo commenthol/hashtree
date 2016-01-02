@@ -138,6 +138,14 @@ describe ('hashTree.use', function (){
 			hashTree.use(obj, 'one.a').or(true).and(true).not();
 			assert.deepEqual(obj, exp);
 		});
+		it ('add number to uninitialized value', function (){
+			var obj = {};
+			var exp = { one: { a: 21 } };
+
+			hashTree.use(obj, 'one.a').add(18);
+			hashTree.use(obj, 'one.a').add(3);
+			assert.deepEqual(obj, exp);
+		});
 	});
 
 	describe ('functions on strings - automatic conversion to number', function(){

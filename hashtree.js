@@ -12,6 +12,10 @@
 
 	var hashTree = {};
 
+	function isObject (obj) {
+		return (typeof obj === 'object')
+	}
+
 	/**
 	 * Gets a value in the hash tree `obj` according to `keys`.
 	 *
@@ -86,6 +90,9 @@
 			}
 			else {
 				// append a new branch
+				if (typeof tmp !== 'object') {
+					break;
+				}
 				tmp = tmp[keys[i]] = {};
 				newbr = true;
 			}
@@ -100,6 +107,9 @@
 			)
 		) {
 			return false;
+		}
+		if (!isObject(last)) {
+			return false
 		}
 
 		last[lastkey] = value;
@@ -233,9 +243,10 @@
 	 *
 	 * @param {Object} obj : Object to sort
 	 * @param {Function} sorter : sorting function with arguments (a, b)
+	 * @param {Function} arraysorter : sorting function for arrays with arguments (a, b)
 	 * @return {Object} sorted obj
 	 */
-	hashTree.sort = function(obj, sorter) {
+	hashTree.sort = function(obj, sorter, arraysorter) {
 		var
 			i,
 			a = [],
@@ -244,7 +255,12 @@
 		if (obj && typeof(obj) === 'object' && obj !== null) {
 			if (Array.isArray(obj)) {
 				// Array
-				tmp = obj.sort(sorter);
+				if (arraysorter) {
+					tmp = obj.sort(arraysorter);
+				}
+				else {
+					tmp = obj;
+				}
 			}
 			else {
 				// Object
@@ -256,7 +272,7 @@
 					}
 				}
 				a.sort(sorter).forEach(function(p){
-					tmp[p] = hashTree.sort(obj[p], sorter);
+					tmp[p] = hashTree.sort(obj[p], sorter, arraysorter);
 				});
 			}
 		}

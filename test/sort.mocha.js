@@ -11,9 +11,9 @@ function sortDesc(a, b) {
 	return (a > b) ? -1 : ( a == b ? 0 : 1);
 }
 
-describe ('hashTree.sort', function (){
+describe('hashTree.sort', function (){
 
-	it ('- sort empty object', function (){
+	it('- sort empty object', function (){
 
 		var obj = {};
 		var result = hashTree.sort(obj);
@@ -23,7 +23,7 @@ describe ('hashTree.sort', function (){
 
 	});
 
-	it ('- sort object', function (){
+	it('- sort object', function (){
 
 		var obj = {
 			"z":{"zz":3,"zm":2,"za":1},
@@ -40,7 +40,7 @@ describe ('hashTree.sort', function (){
 		assert.equal(JSON.stringify(result), JSON.stringify(expected));
 	});
 
-	it ('- sort object with custom sorter', function (){
+	it('- sort object with custom sorter', function (){
 
 		var obj = {
 			"z": { "az": 3, "am": 2, "aa": 1 },
@@ -58,7 +58,7 @@ describe ('hashTree.sort', function (){
 		assert.equal(JSON.stringify(result), JSON.stringify(expected));
 	});
 
-	it ('- sort object with array custom sorter', function (){
+	it('- sort object with array custom sorter', function (){
 
 		var obj = {
 			"z": { "az": [8,7,9], "am": 2, "aa": 1 },
@@ -66,7 +66,7 @@ describe ('hashTree.sort', function (){
 			"m": { "am": 1, "az": 3, "aa": [4,5,6] }
 		};
 
-		var result = hashTree.sort(obj, sortDesc);
+		var result = hashTree.sort(obj, sortDesc, sortDesc);
 		var expected = {
 			z: { az: [ 9, 8, 7 ], am: 2, aa: 1 },
 			m: { az: 3, am: 1, aa: [ 6, 5, 4 ] },
@@ -78,9 +78,9 @@ describe ('hashTree.sort', function (){
 
 });
 
-describe ('HashTree.sort', function (){
+describe('HashTree.sort', function (){
 
-	it ('- sort HashTree with custom sorter', function (){
+	it('- sort HashTree with custom sorter', function (){
 
 		var obj = {
 			"z": { "az": 3, "am": 2, "aa": 1 },

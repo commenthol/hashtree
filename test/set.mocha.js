@@ -204,7 +204,7 @@ describe ('hashTree.set', function (){
 		assert.deepEqual(obj, {"this":{"constructor":1,"prototype":"a"}});
 	});
 
-	it ('- set value using reserved keywords', function (){
+	it ('- set value using reserved keywords #2', function (){
 		var r;
 		var obj = {};
 		hashTree.set(obj, [ 1, 5, 9 ], '#1');
