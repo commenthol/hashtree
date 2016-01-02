@@ -39,7 +39,7 @@
 			return obj;
 		}
 
-		for (i = 0; i < keys.length; i+=1 ) {
+		for (i in keys) {
 			if (typeof tmp === 'object' && tmp.hasOwnProperty(keys[i])) {
 				tmp = tmp[keys[i]];
 			}
@@ -70,9 +70,8 @@
 	 */
 	hashTree.set = function (obj, keys, value, _overwrite){
 		var i,
+      key,
 			lastkey,
-			newbr = false,
-			last,
 			tmp = obj;
 
 		_overwrite = _overwrite || false;
@@ -82,39 +81,29 @@
 			return false;
 		}
 
-		for (i = 0; i < keys.length; i +=1) {
-			last = tmp;
-			if (tmp.hasOwnProperty([keys[i]])) {
-				tmp = tmp[keys[i]];
-				newbr = false;
-			}
-			else {
-				// append a new branch
-				if (typeof tmp !== 'object') {
-					break;
-				}
-				tmp = tmp[keys[i]] = {};
-				newbr = true;
-			}
-		}
-		lastkey = keys[keys.length-1];
+    lastkey = keys.pop()
 
-		if (!_overwrite &&
-			(last[lastkey] === undefined ||
-				!newbr &&
-				typeof(last[lastkey]) === 'object' &&
-				typeof(value) !== 'object'
-			)
-		) {
-			return false;
-		}
-		if (!isObject(last)) {
-			return false
-		}
+		for (i in keys) {
+      key = keys[i];
 
-		last[lastkey] = value;
-		return true;
-	};
+      if (tmp[key] && !isObject(tmp[key])) {
+        return false;
+      }
+
+      if (!tmp[key]) {
+        tmp[key] = {};
+      }
+      if (tmp.hasOwnProperty(key)) {
+        tmp = tmp[key];
+      }
+    }
+    if (!_overwrite && !isObject(value) && isObject(tmp[lastkey])) {
+      return false
+    }
+
+    tmp[lastkey] = value;
+    return true;
+  };
 
 	/**
 	 * Deletes a branch of the hash tree on `obj`.
