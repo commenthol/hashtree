@@ -2,31 +2,33 @@
   "name": "hashtree",
   "version": "0.7.0",
   "description": "Build up \"hash of hashes\" in javascript and access the data contained.",
-  "main": "hashtree.js",
-  "author": "commenthol <commenthol@gmail.com>",
-  "license": "MIT",
   "keywords": [
     "hash",
-    "hashtree",
-    "hash-of-hashes"
+    "hash-of-hashes",
+    "hashtree"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/commenthol/hashtree"
-  },
   "homepage": "https://github.com/commenthol/hashtree",
   "bugs": {
     "url": "http://github.com/commenthol/hashtree/issues"
   },
-  "scripts": {
-    "test": "mocha",
-    "lint": "eslint \"**/*.js\"",
-    "cover": "nyc -r text npm t",
-    "dox": "apidox -i hashtree.js -o docs/documentation.md"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/commenthol/hashtree"
   },
+  "license": "MIT",
+  "author": "commenthol <commenthol@gmail.com>",
+  "main": "hashtree.js",
   "directories": {
     "doc": "docs",
     "test": "test"
+  },
+  "scripts": {
+    "all": "npm run lint && npm run cover",
+    "cover": "nyc -r text npm t",
+    "dox": "apidox -i hashtree.js -o docs/documentation.md",
+    "lint": "eslint \"**/*.js\"",
+    "prepublishOnly": "npm run all",
+    "test": "mocha"
   },
   "dependencies": {},
   "devDependencies": {
