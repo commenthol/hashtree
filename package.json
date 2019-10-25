@@ -20,8 +20,8 @@
   },
   "scripts": {
     "test": "mocha",
-    "lint": "jshint --show-non-errors *.js */*.js",
-    "cover": "istanbul cover _mocha --report lcov --report text -- -R dot --check-leaks test/*.mocha.js",
+    "lint": "eslint \"**/*.js\"",
+    "cover": "nyc -r text npm t",
     "dox": "apidox -i hashtree.js -o docs/documentation.md"
   },
   "directories": {
@@ -30,7 +30,13 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "mocha": "^2.0.1",
-    "jshint": "latest"
+    "eslint": "^6.5.1",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "mocha": "^6.2.2",
+    "nyc": "^14.1.1"
   }
 }

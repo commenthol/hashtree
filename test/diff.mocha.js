@@ -1,113 +1,100 @@
-/*globals describe, it*/
+/* globals describe, it */
 
-"use strict";
+'use strict'
 
-var assert = require('assert'),
-	hashTree = require('../hashtree.js').hashTree;
+var assert = require('assert')
+var hashTree = require('../hashtree.js').hashTree
 
-describe('object differences', function(){
+describe('object differences', function () {
+  it('- compare empty', function () {
+    var o1 = {}
+    var o2 = {}
 
-	it('- compare empty', function(){
+    var result = hashTree.diff(o1, o2)
+    var expected = { diff1: {}, diff2: {} }
 
-		var o1 = {},
-			o2 = {};
+    assert.deepStrictEqual(result, expected)
+  })
 
-		var result = hashTree.diff(o1, o2);
-		var expected = {"diff1":{},"diff2":{}};
+  it('- compare same objects', function () {
+    var o1 = { a: { b: 'b' }, c: 3 }
+    var o2 = { a: { b: 'b' }, c: 3 }
 
-		assert.deepEqual(result, expected);
-	});
+    var result = hashTree.diff(o1, o2)
+    var expected = { diff1: {}, diff2: {} }
 
-	it('- compare same objects', function(){
+    assert.deepStrictEqual(result, expected)
+  })
 
-		var o1 = { a: { b: 'b' }, c: 3 },
-			o2 = { a: { b: 'b' }, c: 3 };
+  it('- compare only in 1', function () {
+    var o1 = { a: 'a' }
+    var o2 = {}
 
-		var result = hashTree.diff(o1, o2);
-		var expected = {"diff1":{},"diff2":{}};
+    var result = hashTree.diff(o1, o2)
+    var expected = { diff1: { a: 'a' }, diff2: {} }
 
-		assert.deepEqual(result, expected);
-	});
+    assert.deepStrictEqual(result, expected)
+  })
 
-	it('- compare only in 1', function(){
+  it('- compare only in 2', function () {
+    var o1 = {}
+    var o2 = { a: 'a' }
 
-		var o1 = { a: 'a' },
-			o2 = {};
+    var result = hashTree.diff(o1, o2)
+    var expected = { diff1: {}, diff2: { a: 'a' } }
 
-		var result = hashTree.diff(o1, o2);
-		var expected = {"diff1":{ a: 'a' },"diff2":{}};
+    assert.deepStrictEqual(result, expected)
+  })
 
-		assert.deepEqual(result, expected);
-	});
+  it('- compare different properties', function () {
+    var o1 = { a: 0 }
+    var o2 = { a: { b: 'b' } }
 
-	it('- compare only in 2', function(){
+    var result = hashTree.diff(o1, o2)
+    var expected = { diff1: { a: 0 }, diff2: { a: { b: 'b' } } }
 
-		var o1 = {},
-			o2 = { a: 'a' };
+    assert.deepStrictEqual(result, expected)
+  })
 
-		var result = hashTree.diff(o1, o2);
-		var expected = {"diff1":{},"diff2":{ a: 'a' }};
+  it('- compare different and common properties', function () {
+    var o1 = { a: 0, c: 3 }
+    var o2 = { a: { b: 'b' }, c: 3 }
 
-		assert.deepEqual(result, expected);
-	});
+    var result = hashTree.diff(o1, o2)
+    var expected = { diff1: { a: 0 }, diff2: { a: { b: 'b' } } }
 
-	it('- compare different properties', function(){
+    assert.deepStrictEqual(result, expected)
+  })
 
-		var o1 = { a: 0 },
-			o2 = { a: { b: 'b' }};
+  it('- compare different and common properties with reserved keywords', function () {
+    var o1 = { constructor: 0, c: 3 }
+    var o2 = { prototype: { b: 'b' }, c: 3 }
 
-		var result = hashTree.diff(o1, o2);
-		var expected = {"diff1":{"a":0},"diff2":{"a":{"b":"b"}}};
+    var result = hashTree.diff(o1, o2)
+    var expected = { diff1: { constructor: 0 }, diff2: { prototype: { b: 'b' } } }
 
-		assert.deepEqual(result, expected);
-	});
+    assert.deepStrictEqual(JSON.stringify(result), JSON.stringify(expected))
+  })
+})
 
-	it('- compare different and common properties', function(){
+describe('object differences to base', function () {
+  it('- compare empty', function () {
+    var o1 = {}
+    var o2 = {}
 
-		var o1 = { a: 0, c: 3 },
-			o2 = { a: { b: 'b' }, c: 3 };
+    var result = hashTree.diffToBase(o1, o2)
+    var expected = {}
 
-		var result = hashTree.diff(o1, o2);
-		var expected = {"diff1":{"a":0},"diff2":{"a":{"b":"b"}}};
+    assert.deepStrictEqual(result, expected)
+  })
 
-		assert.deepEqual(result, expected);
-	});
+  it('- compare different properties', function () {
+    var o1 = { one: { a: 1, c: 3 } }
+    var o2 = { one: { a: 1, b: 2 } }
 
-	it('- compare different and common properties with reserved keywords', function(){
-		var o1 = { "constructor": 0, c: 3 },
-			o2 = { "prototype": { b: 'b' }, c: 3 };
+    var result = hashTree.diffToBase(o1, o2)
+    var expected = { one: { b: 2 } }
 
-		var result = hashTree.diff(o1, o2);
-		var expected = {"diff1":{"constructor":0},"diff2":{'prototype':{"b":"b"}}};
-
-		assert.deepEqual(JSON.stringify(result), JSON.stringify(expected));
-	});
-});
-
-describe('object differences to base', function(){
-
-	it('- compare empty', function(){
-
-		var o1 = {},
-			o2 = {};
-
-		var result = hashTree.diffToBase(o1, o2);
-		var expected = {};
-
-		assert.deepEqual(result, expected);
-	});
-
-	it('- compare different properties', function(){
-		var o1 = { one: { a: 1, c: 3 } },
-			o2 = { one: { a: 1, b: 2 } };
-
-		var result = hashTree.diffToBase(o1, o2);
-		var expected = {"one":{"b":2}};
-
-		assert.deepEqual(result, expected);
-	});
-});
-
-
-
-
+    assert.deepStrictEqual(result, expected)
+  })
+})
